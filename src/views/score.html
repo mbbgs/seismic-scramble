@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= user.username %> | Seismic Scramble Score</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="hero-logo">
+        <img src="/seismic.svg" alt="Seismic Logo">
+      </div>
+      <div class="logo-text">SCRAMBLE RESULTS</div>
+      <div class="subtitle">
+        Your seismic understanding has been recorded.<br>
+        Here's how you shook the system.
+      </div>
+    </div>
+  </section>
+
+  <div class="result-wrapper">
+    <div class="result-card success">
+      <div class="result-header">🏆</div>
+
+      <!-- 🖼️ Profile Picture -->
+      <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:1rem;">
+        <img 
+          src="<%= user.profile || '/default-avatar.jpg' %>" 
+          alt="<%= user.username %>"
+          style="width:96px; height:96px; border-radius:50%; border:2px solid rgba(90,55,68,.25); object-fit:cover; box-shadow:0 2px 10px rgba(0,0,0,.1);"
+        >
+      </div>
+
+      <h2><%= user.username %></h2>
+      <p>Your Score</p>
+      <h2 style="font-size:2.2rem; margin-bottom:1rem;"><%= user.score %></h2>
+      <p><strong>Radar:</strong> <%= user.radar || 'Not available' %></p>
+
+      <div class="result-actions">
+        <a href="/headboard" class="btn outline">View Leaderboard</a>
+        <a href="/" class="btn primary">Play Again</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-section">
+    <div class="cta-title">Learn More About Seismic</div>
+    <div class="cta-text">
+      Seismic Systems blend privacy with transparency — redefining financial encryption.  
+      Continue exploring how it works under the hood.
+    </div>
+    <div class="cta-links">
+      <a href="https://seismic.systems" class="cta-link primary" target="_blank">Official Site</a>
+      <a href="https://docs.seismic.systems" class="cta-link" target="_blank">Documentation</a>
+    </div>
+  </div>
+
+  <footer class="dev-footer">
+    <div class="dev-container">
+      <p class="credit">Crafted by <span>Seismicist</span> ⚡</p>
+      <div class="social-links">
+        <a href="https://x.com/hound_tre" target="_blank" aria-label="Twitter / X">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.496 11.24h-6.66l-5.214-6.818-5.96 6.818H1.68l7.73-8.845L1.254 2.25h6.84l4.715 6.231zM17.093 19.71h1.832L7.02 4.072H5.048z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
