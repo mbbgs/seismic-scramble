@@ -50,24 +50,39 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: [
-        "'self'",
-        (req, res) => `'nonce-${res.locals.nonce}'`,
-        "https://unpkg.com",
-        "https://cdnjs.cloudflare.com",
-        "https://cdn.jsdelivr.net",
-      ],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
-      imgSrc: ["'self'", "data:", "https:"],
-      fontSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
-      connectSrc: ["'self'"],
-    },
-  })
-);
+app.use((req, res, next) => {
+	helmet.contentSecurityPolicy({
+		directives: {
+			defaultSrc: ["'self'"],
+			scriptSrc: [
+				"'self'",
+				`'nonce-${res.locals.nonce}'`,
+				"https://unpkg.com",
+				"https://cdnjs.cloudflare.com",
+				"https://cdn.jsdelivr.net"
+			],
+			styleSrc: [
+				"'self'",
+				"https://cdn.jsdelivr.net",
+				"'unsafe-inline'",
+			],
+			styleSrcElem: [
+				"'self'",
+				"https://cdn.jsdelivr.net",
+				"'unsafe-inline'",
+			],
+			imgSrc: ["'self'", "data:", "https:"],
+			fontSrc: [
+				"'self'",
+				"data:",
+				"https://cdn.jsdelivr.net"
+			],
+			connectSrc: ["'self'"],
+		},
+	})(req, res, next);
+});
+
+
 
 app.use(
   cors({
