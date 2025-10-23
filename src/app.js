@@ -56,6 +56,7 @@ app.use((req, res, next) => {
   next();
 });
 
+/**
 // Helmet CSP (tight but compatible with CDNs)
 app.use((req, res, next) => {
   helmet.contentSecurityPolicy({
@@ -76,7 +77,7 @@ app.use((req, res, next) => {
   })(req, res, next)
 });
 
-
+**/
 
 
 // CORS setup
