@@ -52,7 +52,7 @@ function safeRender(res, view, data = {}) {
     res.render(view, data);
   } catch (err) {
     console.error(`Error rendering ${view}:`, err);
-    res.status(500).render("error_500");
+    res.status(500).render("error_500.html");
   }
 }
 
@@ -73,12 +73,12 @@ router.get("/", async (req, res) => {
         score: req.user.score,
         radar: req.user.radar,
       };
-      return safeRender(res, "index", { user: safeUser });
+      return safeRender(res, "index.html", { user: safeUser });
     }
-    return safeRender(res, "index");
+    return safeRender(res, "index.html");
   } catch (error) {
     console.error("Error loading homepage:", error);
-    return res.status(500).render("error_500");
+    return res.status(500).render("error_500.html");
   }
 });
 
@@ -92,10 +92,10 @@ router.get("/leaderboard", ensureAuth, async (req, res) => {
       .limit(20)
       .lean();
     
-    return safeRender(res, "headboard", { users });
+    return safeRender(res, "leaderboard.html", { users });
   } catch (err) {
     console.error("Error loading leaderboard:", err);
-    res.status(500).render("error_500");
+    res.status(500).render("error_500.html");
   }
 });
 
@@ -104,16 +104,16 @@ router.get("/score/:hash_id", ensureAuth, async (req, res) => {
   try {
     const { hash_id } = req.params;
     if (!/^[A-Za-z0-9+/=]+$/.test(hash_id)) {
-      return res.status(400).render("error_400");
+      return res.status(400).render("error_400.html");
     }
     
     const user = await User.findOne({ hash_id }).select("username profile score radar").lean();
-    if (!user) return res.status(404).render("error_404");
+    if (!user) return res.status(404).render("error_404.html");
     
-    safeRender(res, "score", { user });
+    safeRender(res, "score.html", { user });
   } catch (err) {
     console.error("Error loading score page:", err);
-    res.status(500).render("error_500");
+    res.status(500).render("error_500.html");
   }
 });
 
