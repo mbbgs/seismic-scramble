@@ -15,7 +15,7 @@ const bodyParser = require("body-parser");
 const mongoSanitize = require("express-mongo-sanitize");
 const crypto = require("crypto");
 
-const User = require("./models/User");
+const User = require("./models/User.js");
 const { globalErrorHandler, notFoundHandler } = require("./middlewares/error.js");
 const authRoutes = require("./routes/api.js");
 const gameRoutes = require("./routes/view.js");
