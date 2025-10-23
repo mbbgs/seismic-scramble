@@ -9,9 +9,9 @@ const ejs = require("ejs");
 const cors = require("cors");
 const crypto = require("crypto");
 
-const User = require("./models/User");
-const authRoutes = require("./routes/api.js");
-const gameRoutes = require("./routes/view.js");
+const User = require("./models/User.js");
+const apiRoutes = require("./routes/api.js");
+const viewRoutes = require("./routes/view.js");
 
 const app = express();
 const MainRouter = express.Router();
@@ -90,8 +90,8 @@ passport.deserializeUser(async (id, done) => {
 });
 
 // Routes
-MainRouter.use("/api", authRoutes);
-MainRouter.use("/game", gameRoutes);
+MainRouter.use("/api", apiRoutes);
+MainRouter.use("/", viewRoutes);
 app.use("/", MainRouter);
 
 // Health check
