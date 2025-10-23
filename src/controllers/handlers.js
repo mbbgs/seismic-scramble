@@ -7,7 +7,7 @@ const TIME_PENALTY_RATE = 2;
 const SUSPICIOUS_TIME = 30000; // 30 seconds
 const CHEAT_SCORE = 10000;
 
-module.exports.SubmitScore = async function(req, res) {
+module.exports.submitScore = async function(req, res) {
   try {
     const { hash_id, score } = req.body;
     const user_id = req.user?.user_id;
@@ -61,7 +61,7 @@ module.exports.SubmitScore = async function(req, res) {
   }
 };
 
-module.exports.StartGame = async function(req, res) {
+module.exports.startGame = async function(req, res) {
   try {
     const  user = req.user;
     const userId = user.user_id;
