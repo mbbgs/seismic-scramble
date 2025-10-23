@@ -57,7 +57,7 @@ app.use((req, res, next) => {
 });
 
 // Helmet CSP (tight but compatible with CDNs)
-app.use((req,res, next) => {
+app.use((req, res, next) => {
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
@@ -73,7 +73,7 @@ app.use((req,res, next) => {
       fontSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
       connectSrc: ["'self'"],
     },
-  })
+  })(req, res, next)
 });
 
 
