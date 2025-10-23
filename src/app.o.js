@@ -6,7 +6,7 @@ const TwitterStrategy = require("passport-twitter-oauth2").Strategy;
 const mongoose = require("mongoose");
 const path = require("path");
 const helmet = require("helmet");
-const ejs = require('ejs');
+const ejs = require('ejs')
 const compression = require("compression");
 const cors = require("cors");
 const hpp = require("hpp");
@@ -15,28 +15,45 @@ const bodyParser = require("body-parser");
 const mongoSanitize = require("express-mongo-sanitize");
 const crypto = require("crypto");
 
+// Models & Routes
 const User = require("./models/User");
 const { globalErrorHandler, notFoundHandler } = require("./middlewares/error.js");
 const authRoutes = require("./routes/api.js");
 const gameRoutes = require("./routes/view.js");
+
+
 const { appLimiter } = require("./middlewares/limiter.js");
 
+// App
 const app = express();
 
+// ------------------------------------------------------------
+// BASIC APP SETTINGS
+// ------------------------------------------------------------
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.engine('html', ejs.renderFile);
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.engine('html', ejs.renderFile)
+app.set('view engine', 'ejs')
+app.set('views', path.join(__dirname, 'views'))
 
+
+// ------------------------------------------------------------
+// SECURITY + PERFORMANCE
+// ------------------------------------------------------------
 app.use(compression());
 app.use(hpp());
 app.use(mongoSanitize());
 app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
+// Add Helmet safely
+app.use(helmet());
+
+// CSP with nonce
 app.use((req, res, next) => {
   res.locals.nonce = crypto.randomBytes(16).toString("base64");
   next();
@@ -61,6 +78,9 @@ app.use(
   })
 );
 
+
+
+// CORS setup
 app.use(
   cors({
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -70,15 +90,22 @@ app.use(
   })
 );
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'public', 'images')));
-app.use(express.static(path.join(__dirname, 'public', 'scripts')));
-app.use(express.static(path.join(__dirname, 'public', 'styles')));
+// ------------------------------------------------------------
+// STATIC FILES
+// ------------------------------------------------------------
+// Static Files and Security Middleware
+app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public', 'images')))
+app.use(express.static(path.join(__dirname, 'public', 'scripts')))
+app.use(express.static(path.join(__dirname, 'public', 'styles')))
 
-app.use(
+// ------------------------------------------------------------
+// SESSION + PASSPORT
+// ------------------------------------------------------------
+/*app.use(
   session({
     name: "seismic.sid",
-    secret: process.env.SESSION_SECRET || "seismicSecretKey",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     rolling: true,
@@ -89,11 +116,14 @@ app.use(
       secure: process.env.NODE_ENV === "production",
     },
   })
-);
+);*/
 
-app.use(passport.initialize());
-app.use(passport.session());
+//app.use(passport.initialize());
+//app.use(passport.session());
 
+// ------------------------------------------------------------
+// PASSPORT TWITTER STRATEGY
+// ------------------------------------------------------------
 passport.use(
   new TwitterStrategy(
     {
@@ -140,15 +170,24 @@ passport.deserializeUser(async (obj, done) => {
   }
 });
 
+// ------------------------------------------------------------
+// CUSTOM MIDDLEWARES
+// ------------------------------------------------------------
 app.use(appLimiter);
 
+
+// ------------------------------------------------------------
+// ROUTES
+// ------------------------------------------------------------
 app.use("/", authRoutes);
 app.use("/api", gameRoutes);
 
+// Static and SEO routes
 app.get("/robots.txt", (req, res) =>
   res.sendFile(path.join(__dirname, "robots.txt"))
 );
 
+// Health check
 app.get("/ndu", (req, res) =>
   res.status(200).json({
     status: "healthy",
@@ -159,7 +198,15 @@ app.get("/ndu", (req, res) =>
   })
 );
 
-app.use(notFoundHandler);
+// ------------------------------------------------------------
+// ERROR HANDLERS
+// ------------------------------------------------------------
 app.use(globalErrorHandler);
+app.use(notFoundHandler);
+
+app.use((err, req, res, next) => {
+  console.error("Error:", err);
+  res.status(500).json({ error: err.message });
+});
 
 module.exports = app;
