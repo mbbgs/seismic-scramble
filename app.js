@@ -50,38 +50,32 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-	helmet.contentSecurityPolicy({
-		directives: {
-			defaultSrc: ["'self'"],
-			scriptSrc: [
-				"'self'",
-				`'nonce-${res.locals.nonce}'`,
-				"https://unpkg.com",
-				"https://cdnjs.cloudflare.com",
-				"https://cdn.jsdelivr.net"
-			],
-			styleSrc: [
-				"'self'",
-				"https://cdn.jsdelivr.net",
-				"'unsafe-inline'",
-			],
-			styleSrcElem: [
-				"'self'",
-				"https://cdn.jsdelivr.net",
-				"'unsafe-inline'",
-			],
-			imgSrc: ["'self'", "data:", "https:"],
-			fontSrc: [
-				"'self'",
-				"data:",
-				"https://cdn.jsdelivr.net"
-			],
-			connectSrc: ["'self'"],
-		},
-	})(req, res, next);
-});
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "'unsafe-eval'",
+          "https://cdnjs.cloudflare.com",
+          "https://cdn.jsdelivr.net",
+          "https://unpkg.com",
+        ],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+        imgSrc: ["'self'", "data:", "https:"],
+        fontSrc: ["'self'", "data:"],
+      },
+    },
+    crossOriginEmbedderPolicy: false,
+  })
+);
 
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public', 'images')));
+app.use(express.static(path.join(__dirname, 'public', 'scripts')));
+app.use(express.static(path.join(__dirname, 'public', 'styles')));
 
 
 app.use(
@@ -93,10 +87,6 @@ app.use(
   })
 );
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'public', 'images')));
-app.use(express.static(path.join(__dirname, 'public', 'scripts')));
-app.use(express.static(path.join(__dirname, 'public', 'styles')));
 
 app.use(
   session({
