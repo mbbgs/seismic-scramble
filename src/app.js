@@ -50,21 +50,22 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Nonce for inline scripts (CSP)
+// Add Helmet safely
+app.use(helmet());
+
+// CSP with nonce
 app.use((req, res, next) => {
   res.locals.nonce = crypto.randomBytes(16).toString("base64");
   next();
 });
 
-/**
-// Helmet CSP (tight but compatible with CDNs)
-app.use((req, res, next) => {
+app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: [
         "'self'",
-        `'nonce-${res.locals.nonce}'`,
+        (req, res) => `'nonce-${res.locals.nonce}'`,
         "https://unpkg.com",
         "https://cdnjs.cloudflare.com",
         "https://cdn.jsdelivr.net",
@@ -74,10 +75,9 @@ app.use((req, res, next) => {
       fontSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
       connectSrc: ["'self'"],
     },
-  })(req, res, next)
-});
+  })
+);
 
-**/
 
 
 // CORS setup
@@ -102,7 +102,7 @@ app.use(express.static(path.join(__dirname, 'public', 'styles')))
 // ------------------------------------------------------------
 // SESSION + PASSPORT
 // ------------------------------------------------------------
-app.use(
+/*app.use(
   session({
     name: "seismic.sid",
     secret: process.env.SESSION_SECRET,
@@ -116,10 +116,10 @@ app.use(
       secure: process.env.NODE_ENV === "production",
     },
   })
-);
+);*/
 
-app.use(passport.initialize());
-app.use(passport.session());
+//app.use(passport.initialize());
+//app.use(passport.session());
 
 // ------------------------------------------------------------
 // PASSPORT TWITTER STRATEGY
