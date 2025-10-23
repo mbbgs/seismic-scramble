@@ -5,7 +5,7 @@ const passport = require("passport");
 const TwitterStrategy = require("passport-twitter-oauth2").Strategy;
 const mongoose = require("mongoose");
 const path = require("path");
-const helmet = require("helmet");
+//const helmet = require("helmet");
 const ejs = require('ejs');
 const compression = require("compression");
 const cors = require("cors");
@@ -106,7 +106,7 @@ app.use(
 );
 
 app.use(passport.initialize());
-//app.use(passport.session());
+app.use(passport.session());
 
 passport.use(
   new TwitterStrategy(
