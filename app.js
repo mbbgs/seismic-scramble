@@ -49,7 +49,7 @@ app.use((req, res, next) => {
   res.locals.nonce = crypto.randomBytes(16).toString("base64");
   next();
 });
-/*
+
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -71,12 +71,12 @@ app.use(
     crossOriginEmbedderPolicy: false,
   })
 );
-*/
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'public', 'images')));
-app.use(express.static(path.join(__dirname, 'public', 'scripts')));
-app.use(express.static(path.join(__dirname, 'public', 'styles')));
+
+app.use(express.static(path.join(__dirname,'src', 'public')));
+app.use(express.static(path.join(__dirname,'src', 'public', 'images')));
+app.use(express.static(path.join(__dirname,'src', 'public', 'scripts')));
+app.use(express.static(path.join(__dirname,'src', 'public', 'styles')));
 
 
 app.use(
