@@ -15,11 +15,11 @@ const bodyParser = require("body-parser");
 const mongoSanitize = require("express-mongo-sanitize");
 const crypto = require("crypto");
 
-const User = require("./models/User.js");
-const { globalErrorHandler, notFoundHandler } = require("./middlewares/error.js");
-const authRoutes = require("./routes/api.js");
-const gameRoutes = require("./routes/view.js");
-const { appLimiter } = require("./middlewares/limiter.js");
+const User = require("./src/models/User.js");
+const { globalErrorHandler, notFoundHandler } = require("./src/middlewares/error.js");
+const authRoutes = require("./src/routes/api.js");
+const gameRoutes = require("./src/routes/view.js");
+const { appLimiter } = require("./src/middlewares/limiter.js");
 
 const app = express();
 const MainRouter = express.Router()
