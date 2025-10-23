@@ -187,7 +187,7 @@ app.get("/robots.txt", (req, res) =>
 );
 
 // Health check
-app.get("/api/ndu", (req, res) =>
+app.get("/ndu", (req, res) =>
   res.status(200).json({
     status: "healthy",
     message: "Service is running 🚀",
