@@ -5,7 +5,7 @@ const passport = require("passport");
 const TwitterStrategy = require("passport-twitter-oauth2").Strategy;
 const mongoose = require("mongoose");
 const path = require("path");
-const helmet = require("helmet");
+//const helmet = require("helmet");
 const ejs = require('ejs');
 const compression = require("compression");
 const cors = require("cors");
@@ -49,7 +49,7 @@ app.use((req, res, next) => {
   res.locals.nonce = crypto.randomBytes(16).toString("base64");
   next();
 });
-
+/*
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -71,6 +71,7 @@ app.use(
     crossOriginEmbedderPolicy: false,
   })
 );
+*/
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public', 'images')));
