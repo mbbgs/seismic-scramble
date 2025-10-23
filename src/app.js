@@ -145,7 +145,7 @@ MainRouter.use('/api', appLimiter, authRoutes)
 MainRouter.use('/game', appLimiter, gameRoutes)
 
 
-
+console.log("Here ....")
 // Mount Main Router
 app.use('/', MainRouter);
 
