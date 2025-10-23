@@ -13,7 +13,6 @@ let server;
 const startServer = async () => {
   try {
     
-    await ipBanner.initialize()
     await connectToDb();
     
     
