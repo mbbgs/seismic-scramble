@@ -22,6 +22,7 @@ const gameRoutes = require("./routes/view.js");
 const { appLimiter } = require("./middlewares/limiter.js");
 
 const app = express();
+const MainRouter = express.Router()
 
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
@@ -92,7 +93,7 @@ app.use(
 );
 
 app.use(passport.initialize());
-app.use(passport.session());
+//app.use(passport.session());
 
 passport.use(
   new TwitterStrategy(
@@ -140,10 +141,14 @@ passport.deserializeUser(async (obj, done) => {
   }
 });
 
-app.use(appLimiter);
+MainRouter.use('/api', appLimiter, authRoutes)
+MainRouter.use('/game', appLimiter, gameRoutes)
 
-app.use("/", authRoutes);
-app.use("/api", gameRoutes);
+
+
+// Mount Main Router
+app.use('/', MainRouter);
+
 
 app.get("/robots.txt", (req, res) =>
   res.sendFile(path.join(__dirname, "robots.txt"))
