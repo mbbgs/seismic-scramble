@@ -73,7 +73,7 @@ router.get("/", async (req, res) => {
         score: req.user.score,
         radar: req.user.radar,
       };
-      return safeRender(res, "index.html", { user: safeUser });
+      return safeRender(res, "index.html", safeUser);
     }
     return safeRender(res, "index.html");
   } catch (error) {
