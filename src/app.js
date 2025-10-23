@@ -57,7 +57,7 @@ app.use((req, res, next) => {
 });
 
 // Helmet CSP (tight but compatible with CDNs)
-app.use(
+app.use((req,res, next) => {
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
@@ -74,7 +74,10 @@ app.use(
       connectSrc: ["'self'"],
     },
   })
-);
+});
+
+
+
 
 // CORS setup
 app.use(

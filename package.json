@@ -1,10 +1,10 @@
 {
 	"name": "seismic-scramble",
 	"version": "0.1.1",
-	"main": "src/www/bin/server.js",
+	"main": "src/www/server.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "node ./src/www/bin/server.js"
+		"start": "node ./src/www/server.js"
 	},
 	"author": "Mbbgs,Hound_tre",
 	"license": "ISC",
