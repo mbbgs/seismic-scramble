@@ -37,7 +37,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.engine("html", ejs.renderFile);
 app.set("view engine", "html");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "src", "views"));
 
 
 app.use(compression());
