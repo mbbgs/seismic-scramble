@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
-const TwitterStrategy = require("passport-twitter-oauth2").Strategy;
+//const TwitterStrategy = require("passport-twitter-oauth2").Strategy;
 const mongoose = require("mongoose");
 const path = require("path");
 const helmet = require("helmet");
@@ -94,6 +94,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+/*
 // ✅ Twitter OAuth2 Strategy (Fixed)
 passport.use(
   new TwitterStrategy(
@@ -142,6 +143,21 @@ passport.deserializeUser(async (obj, done) => {
     done(err, null);
   }
 });
+*/
+
+passport.serializeUser((user, done) => {
+  done(null, { id: user.user_id });
+});
+
+passport.deserializeUser(async (obj, done) => {
+  try {
+    const user = await User.findOne({ user_id: obj.id });
+    done(null, user);
+  } catch (err) {
+    done(err, null);
+  }
+});
+
 
 MainRouter.use("/api", appLimiter, authRoutes);
 MainRouter.use("/", appLimiter, gameRoutes);
