@@ -6,11 +6,12 @@ const passport = require("passport");
 const mongoose = require("mongoose");
 const path = require("path");
 const helmet = require("helmet");
-const ejs = require("ejs");
+const ejs = require('ejs');
 const compression = require("compression");
 const cors = require("cors");
 const hpp = require("hpp");
 const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 const mongoSanitize = require("express-mongo-sanitize");
 const crypto = require("crypto");
 
@@ -21,16 +22,23 @@ const gameRoutes = require("./src/routes/view.js");
 const { appLimiter } = require("./src/middlewares/limiter.js");
 
 const app = express();
-const MainRouter = express.Router();
+const MainRouter = express.Router()
 
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+/*
+app.engine('html', ejs.renderFile);
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+*/
+
 app.engine("html", ejs.renderFile);
 app.set("view engine", "html");
 app.set("views", path.join(__dirname, "src", "views"));
+
 
 app.use(compression());
 app.use(hpp());
@@ -64,7 +72,12 @@ app.use(
   })
 );
 
-app.use(express.static(path.join(__dirname, "src", "public")));
+
+app.use(express.static(path.join(__dirname, 'src', 'public')));
+app.use(express.static(path.join(__dirname, 'src', 'public', 'images')));
+app.use(express.static(path.join(__dirname, 'src', 'public', 'scripts')));
+app.use(express.static(path.join(__dirname, 'src', 'public', 'styles')));
+
 
 app.use(
   cors({
@@ -74,6 +87,7 @@ app.use(
     origin: process.env.CLIENT_URL || "*",
   })
 );
+
 
 app.use(
   session({
@@ -95,15 +109,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 /*
-// ✅ Twitter OAuth2 Strategy (Fixed)
 passport.use(
   new TwitterStrategy(
     {
       clientID: process.env.TWITTER_CLIENT_ID,
       clientSecret: process.env.TWITTER_CLIENT_SECRET,
       callbackURL: process.env.CALLBACK_URL,
-      tokenURL: "https://api.x.com/2/oauth2/token",
-      authorizationURL: "https://twitter.com/i/oauth2/authorize",
       scope: ["tweet.read", "users.read"],
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -159,10 +170,14 @@ passport.deserializeUser(async (obj, done) => {
 });
 
 
-MainRouter.use("/api", appLimiter, authRoutes);
-MainRouter.use("/", appLimiter, gameRoutes);
+MainRouter.use('/api', appLimiter, authRoutes)
+MainRouter.use('/', appLimiter, gameRoutes)
 
-app.use("/", MainRouter);
+
+console.log("Here ....")
+// Mount Main Router
+app.use('/', MainRouter);
+
 
 app.get("/robots.txt", (req, res) =>
   res.sendFile(path.join(__dirname, "robots.txt"))

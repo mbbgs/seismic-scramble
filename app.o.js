@@ -73,10 +73,10 @@ app.use(
 );
 
 
-app.use(express.static(path.join(__dirname,'src', 'public')));
-app.use(express.static(path.join(__dirname,'src', 'public', 'images')));
-app.use(express.static(path.join(__dirname,'src', 'public', 'scripts')));
-app.use(express.static(path.join(__dirname,'src', 'public', 'styles')));
+app.use(express.static(path.join(__dirname, 'src', 'public')));
+app.use(express.static(path.join(__dirname, 'src', 'public', 'images')));
+app.use(express.static(path.join(__dirname, 'src', 'public', 'scripts')));
+app.use(express.static(path.join(__dirname, 'src', 'public', 'styles')));
 
 
 app.use(
