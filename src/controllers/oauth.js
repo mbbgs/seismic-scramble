@@ -194,7 +194,7 @@ class OAuthController {
             console.error("Session save error:", saveErr);
             return res.status(500).send("Session error. Please try again.");
           }
-          res.redirect("/stage");
+          res.redirect(302,"/stage");
         });
       });
       

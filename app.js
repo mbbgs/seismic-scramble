@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
-//const TwitterStrategy = require("passport-twitter-oauth2").Strategy;
+const MongoStore = require('connect-mongo');
 const mongoose = require("mongoose");
 const path = require("path");
 const helmet = require("helmet");
@@ -89,6 +89,7 @@ app.use(
 );
 
 
+
 app.use(
   session({
     name: "seismic.sid",
@@ -96,6 +97,10 @@ app.use(
     resave: false,
     saveUninitialized: false,
     rolling: true,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      touchAfter: 24 * 3600 // lazy session update
+    }),
     cookie: {
       maxAge: 24 * 60 * 60 * 1000,
       httpOnly: true,
