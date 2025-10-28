@@ -187,7 +187,15 @@ class OAuthController {
           return res.status(500).send("Login failed. Please try again.");
         }
         console.log("Login successful, redirecting...");
-        res.redirect("/");
+        
+        // Save session before redirect to ensure it's persisted
+        req.session.save((saveErr) => {
+          if (saveErr) {
+            console.error("Session save error:", saveErr);
+            return res.status(500).send("Session error. Please try again.");
+          }
+          res.redirect("/stage");
+        });
       });
       
     } catch (error) {
