@@ -155,7 +155,7 @@ class OAuthController {
           user_id: profile.id,
           username: profile.username,
           profile: profile.profile_image_url || "",
-          is_verified: profile.verified || false,
+          is_verified: true,
           radar: "green",
           game_start: new Date(),
           has_played: false,
@@ -164,7 +164,7 @@ class OAuthController {
       } else {
         user.username = profile.username;
         user.profile = profile.profile_image_url || "";
-        user.is_verified = profile.verified || false;
+        user.is_verified = true;
       }
       
       // Store tokens securely

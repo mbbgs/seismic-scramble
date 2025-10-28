@@ -19,6 +19,8 @@ function ensureAuth(req, res, next) {
   if (req.isAuthenticated()) return next();
   return res.redirect("/");
 }
+
+
 router.get("/stage", ensureAuth, async (req, res) => {
   try {
     const safeUser = {
@@ -27,8 +29,6 @@ router.get("/stage", ensureAuth, async (req, res) => {
       score: req.user.score,
       radar: req.user.radar,
     };
-    
-    console.log("Loading stage with user data:", safeUser);
     
     return safeRender(res, "index.html", safeUser);
   } catch (error) {
@@ -41,13 +41,7 @@ router.get("/stage", ensureAuth, async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     if (req.isAuthenticated()) {
-      const safeUser = {
-        username: req.user.username,
-        profile: req.user.profile,
-        score: req.user.score,
-        radar: req.user.radar,
-      };
-      return safeRender(res, "index.html", safeUser);
+      return res.redirect("/stage");
     }
     return safeRender(res, "index.html", {
       username: "",
