@@ -1,0 +1,2 @@
+Seismic Game is a web-based scramble challenge where players test their knowledge of blockchain privacy concepts. The app connects with X to  get their profile and show scores on a public leaderboard
+
