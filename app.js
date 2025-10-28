@@ -84,7 +84,7 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
     credentials: true,
-    origin: process.env.CLIENT_URL || "*",
+    origin: process.env.CLIENT_URL,
   })
 );
 
@@ -93,23 +93,22 @@ app.use(
 app.use(
   session({
     name: "seismic.sid",
-    secret: process.env.SESSION_SECRET || "seismicSecretKey",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     rolling: true,
     store: MongoStore.create({
       mongoUrl: process.env.MONGODB_URI,
-      touchAfter: 24 * 3600 // lazy session update
+      touchAfter: 24 * 3600
     }),
     cookie: {
       maxAge: 24 * 60 * 60 * 1000,
       httpOnly: true,
-      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production", 
     },
   })
 );
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -161,17 +160,10 @@ passport.deserializeUser(async (obj, done) => {
 });
 */
 
-passport.serializeUser((user, done) => {
-  done(null, { id: user.user_id });
-});
-
-passport.deserializeUser(async (obj, done) => {
-  try {
-    const user = await User.findOne({ user_id: obj.id });
-    done(null, user);
-  } catch (err) {
-    done(err, null);
-  }
+passport.serializeUser((user, done) => done(null, user.user_id));
+passport.deserializeUser(async (id, done) => {
+  const user = await User.findOne({ user_id: id });
+  done(null, user);
 });
 
 
