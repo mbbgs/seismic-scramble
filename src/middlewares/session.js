@@ -12,7 +12,7 @@ const MAX_AGE = 3900 * 1000; // 1hr 5min
  */
 
 const requireLogin = (req, res, next) => {
-	if (!req.session?.passport?.user) {
+	if (!req.session?.user) {
 		return sendJson(res, 401, false, "Not authenticated");
 	}
 	next();
@@ -124,7 +124,7 @@ const requireAuth = async function(req, res, next) {
 			if (apiRequest) {
 				return sendJson(res, 401, false, 'User is not logged in');
 			}
-			return res.redirect(302, '/login');
+			return res.redirect(302, '/');
 		}
 		
 		// Handle unverified user

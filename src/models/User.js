@@ -1,48 +1,78 @@
-const mongoose = require("mongoose");
-const crypto = require("crypto");
+const mongoose = require('mongoose');
+const Scrypt = require('../services/Scrypt.js');
 
-const UserSchema = new mongoose.Schema({
-  user_id: { type: String, required: true, unique: true },
-  username: { type: String, required: true },
-  profile: { type: String, default: "" },
-  radar: { type: String, default: "green" },
-  game_start: { type: Date, default: Date.now },
-  has_played: { type: Boolean, default: false },
-  is_verified: { type: Boolean, default: true },
-  score: { type: Number, default: 0 },
-  hash_id: { type: String, unique: true },
-  
-  // OAuth 2.0 Token fields
-  access_token: { type: String, select: false }, // Hidden by default
-  refresh_token: { type: String, select: false },
-  token_expires_at: { type: Date, select: false },
-  token_scope: { type: String, default: "tweet.read users.read" },
-  
-  created_at: { type: Date, default: Date.now },
-  updated_at: { type: Date, default: Date.now }
-});
 
-// Generate hash_id before saving
-UserSchema.pre("save", function(next) {
-  if (!this.hash_id) {
-    this.hash_id = crypto.createHash("sha256")
-      .update(this.user_id + Date.now())
-      .digest("base64url");
+const userSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    unique: true,
+    required: true,
+    index: true
+  },
+  user_id: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  radar: {
+    type: String,
+    required: true,
+    default: 'green',
+    enum: ['green', 'orange', 'red']
+  },
+  start_time: {
+    type: Date,
+    default: null
+  },
+  hash_id: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  avatar: {
+    required: true,
+    type: String
+  },
+  score: {
+    type: Number,
+    default: 0
+  },
+  password: {
+    type: String,
+    required: true
   }
-  this.updated_at = Date.now();
-  next();
+}, {
+  timestamps: true,
+  versionKey: false,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
-// Token management methods
-UserSchema.methods.updateTokens = function(accessToken, refreshToken, expiresIn) {
-  this.access_token = accessToken;
-  this.refresh_token = refreshToken;
-  this.token_expires_at = new Date(Date.now() + expiresIn * 1000);
-  return this.save();
+userSchema.index({ createdAt: -1 });
+
+
+
+
+
+userSchema.statics.hashPassword = async function(password = '') {
+  try {
+    const hashedPassword = await Scrypt.hashToken(password?.trim());
+    return hashedPassword;
+  } catch (error) {
+    console.error('Error hashing password in User model', error)
+    throw error
+  }
 };
 
-UserSchema.methods.isTokenExpired = function() {
-  return !this.token_expires_at || this.token_expires_at < new Date();
+userSchema.methods.comparePassword = async function(password) {
+  try {
+    const isMatched = await Scrypt.verifyToken(password, this.password);
+    return isMatched;
+  } catch (error) {
+    console.error('Error comparing password in User model', error)
+    throw error
+  }
+  
 };
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model('User', userSchema);

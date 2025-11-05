@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seismic - Game of Scramble</title>
+  
+  <meta name="title" content="Seismic - Game of Scramble">
+  <meta name="description" content="Seismic Game is a web-based scramble challenge where players test their knowledge of blockchain privacy concepts. Sign up, play, and climb the leaderboard.">
+  <meta name="keywords" content="Seismic, blockchain, privacy, scramble game, encryption, cybersecurity, web3, learning game">
+  <meta name="author" content="Hound_tre, mbbgss">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            glossyGray: '#333333',
+            neonWhite: '#ffffff',
+          },
+          boxShadow: {
+            glow: '0 0 25px rgba(0,0,0,0.2)',
+          },
+        },
+      },
+    }
+  </script>
+  
+  <style>
+    body {
+      background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 70%, #e0e0e0 100%);
+    }
+  </style>
+</head>
+
+<body class="text-gray-800 font-[Inter,sans-serif] overflow-x-hidden">
+  <!-- HERO -->
+  <section class="min-h-screen flex flex-col items-center justify-center text-center px-6">
+    <img src="/seismic.svg" alt="Seismic Logo" class="w-28 h-28 mb-6 drop-shadow-[0_0_15px_rgba(0,0,0,0.3)] animate-bounce grayscale" />
+    <h1 class="text-5xl font-extrabold text-gray-900 mb-3">SEISMIC SCRAMBLE</h1>
+    <p class="max-w-2xl text-gray-600 leading-relaxed text-lg mb-3">
+      Think you understand how privacy shakes the system?<br>
+      Decode the <strong>Seismic Network</strong> — one scrambled word at a time.<br>
+      Prove your knowledge of blockchain privacy.
+    </p>
+    <p class="text-gray-700 text-lg italic mb-8 animate-pulse">Privacy. Precision. Play.</p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <button id="openLogin" class="px-8 py-3 bg-gray-900 text-white rounded-xl shadow-glow hover:scale-105 transition-transform font-semibold">Login</button>
+      <button id="openSignup" class="px-8 py-3 border border-gray-900 text-gray-900 rounded-xl hover:bg-gray-900 hover:text-white transition font-semibold">Sign Up</button>
+    </div>
+  </section>
+  
+  <!-- ABOUT -->
+  <section class="py-24 px-6 text-center bg-white/60 backdrop-blur-sm">
+    <h2 class="text-3xl font-bold text-gray-900 mb-8">About Seismic Game</h2>
+    <p class="max-w-3xl mx-auto text-gray-700 mb-12">
+      Seismic Game is a knowledge challenge built for privacy and blockchain enthusiasts.
+      Compete, learn, and rise to the top of the global leaderboard as you master encryption concepts.
+    </p>
+    <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      <div class="p-8 bg-white rounded-xl border border-gray-200 hover:shadow-glow transition-transform hover:-translate-y-1">
+        <h3 class="text-3xl font-extrabold text-gray-900">100+</h3>
+        <p class="text-gray-600 mt-2">Concepts to Master</p>
+      </div>
+      <div class="p-8 bg-white rounded-xl border border-gray-200 hover:shadow-glow transition-transform hover:-translate-y-1">
+        <h3 class="text-3xl font-extrabold text-gray-900">Top 50</h3>
+        <p class="text-gray-600 mt-2">Leaderboard Rankings</p>
+      </div>
+      <div class="p-8 bg-white rounded-xl border border-gray-200 hover:shadow-glow transition-transform hover:-translate-y-1">
+        <h3 class="text-3xl font-extrabold text-gray-900">1</h3>
+        <p class="text-gray-600 mt-2">Champion of Privacy</p>
+      </div>
+    </div>
+  </section>
+  
+  <!-- HOW IT WORKS -->
+  <section class="py-24 px-6 bg-gradient-to-t from-gray-100 to-white text-center">
+    <h2 class="text-3xl font-bold text-gray-900 mb-10">How It Works</h2>
+    <div class="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+      <div class="p-8 bg-white rounded-xl border border-gray-200 hover:shadow-glow transition">
+        <div class="text-4xl mb-3 grayscale">🧑‍💻</div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Create an Account</h3>
+        <p class="text-gray-700">Register easily using your email and start your Seismic journey.</p>
+      </div>
+      <div class="p-8 bg-white rounded-xl border border-gray-200 hover:shadow-glow transition">
+        <div class="text-4xl mb-3 grayscale">🔐</div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Play the Scramble</h3>
+        <p class="text-gray-700">Unscramble blockchain terms, test your skill, and earn points for each correct answer.</p>
+      </div>
+      <div class="p-8 bg-white rounded-xl border border-gray-200 hover:shadow-glow transition">
+        <div class="text-4xl mb-3 grayscale">🏆</div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Rise to the Top</h3>
+        <p class="text-gray-700">Compete with other players and make your way onto the leaderboard.</p>
+      </div>
+    </div>
+  </section>
+  
+  <!-- CTA -->
+  <section class="py-24 text-center">
+    <h2 class="text-4xl font-bold mb-4 text-gray-900">Get Started with Seismic</h2>
+    <p class="text-gray-600 max-w-2xl mx-auto mb-8">
+      Experience blockchain learning like never before. Join the network, test your skills, and discover the power of privacy.
+    </p>
+    <div class="flex justify-center gap-4 flex-wrap">
+      <button id="openSignup2" class="px-10 py-4 bg-gray-900 text-white rounded-xl shadow-glow hover:scale-105 transition-transform font-semibold">Join Now</button>
+      <button id="openLogin2" class="px-10 py-4 border border-gray-900 text-gray-900 rounded-xl hover:bg-gray-900 hover:text-white transition font-semibold">Login</button>
+    </div>
+  </section>
+  
+  <!-- FOOTER -->
+  <footer class="py-10 border-t border-gray-200 text-center text-gray-600">
+    <p>Crafted by a <span class="text-gray-900 font-semibold">Seismicist</span></p>
+    <a href="https://x.com/hound_tre" target="_blank" class="inline-block mt-2 hover:text-gray-900 transition">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" class="inline">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.496 11.24h-6.66l-5.214-6.818-5.96 6.818H1.68l7.73-8.845L1.254 2.25h6.84l4.715 6.231zM17.093 19.71h1.832L7.02 4.072H5.048z" />
+      </svg>
+    </a>
+  </footer>
+  
+  <!-- MODALS -->
+  <div id="loginModal" class="fixed inset-0 hidden items-center justify-center bg-white/80 backdrop-blur-sm z-50">
+    <div class="bg-white p-8 rounded-2xl w-[90%] max-w-md border border-gray-200 shadow-glow relative">
+      <button id="closeLogin" class="absolute top-3 right-4 text-gray-400 hover:text-gray-900 text-2xl">&times;</button>
+      <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Login to Seismic</h2>
+      <form action="/login" method="POST" class="flex flex-col gap-4">
+        <input type="email" name="email" placeholder="Email" required class="p-3 rounded-lg bg-white border border-gray-200 text-gray-700 focus:outline-none focus:border-gray-900" />
+        <input type="password" name="password" placeholder="Password" required class="p-3 rounded-lg bg-white border border-gray-200 text-gray-700 focus:outline-none focus:border-gray-900" />
+        <button type="submit" class="mt-2 bg-gray-900 text-white py-3 rounded-xl font-semibold hover:scale-105 transition-transform">Login</button>
+      </form>
+      <p class="text-center text-gray-600 text-sm mt-4">Don't have an account? <a href="#" id="switchToSignup" class="text-gray-900 hover:underline">Sign up</a></p>
+    </div>
+  </div>
+  
+  <div id="signupModal" class="fixed inset-0 hidden items-center justify-center bg-white/80 backdrop-blur-sm z-50">
+    <div class="bg-white p-8 rounded-2xl w-[90%] max-w-md border border-gray-200 shadow-glow relative">
+      <button id="closeSignup" class="absolute top-3 right-4 text-gray-400 hover:text-gray-900 text-2xl">&times;</button>
+      <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Create Your Account</h2>
+      <form action="/signup" method="POST" class="flex flex-col gap-4">
+        <input type="text" name="username" placeholder="Username" required class="p-3 rounded-lg bg-white border border-gray-200 text-gray-700 focus:outline-none focus:border-gray-900" />
+        <input type="email" name="email" placeholder="Email" required class="p-3 rounded-lg bg-white border border-gray-200 text-gray-700 focus:outline-none focus:border-gray-900" />
+        <input type="password" name="password" placeholder="Password" required class="p-3 rounded-lg bg-white border border-gray-200 text-gray-700 focus:outline-none focus:border-gray-900" />
+        <button type="submit" class="mt-2 bg-gray-900 text-white py-3 rounded-xl font-semibold hover:scale-105 transition-transform">Sign Up</button>
+      </form>
+      <p class="text-center text-gray-600 text-sm mt-4">Already have an account? <a href="#" id="switchToLogin" class="text-gray-900 hover:underline">Login</a></p>
+    </div>
+  </div>
+  
+  <!-- JS -->
+  <script>
+    const loginModal = document.getElementById('loginModal');
+    const signupModal = document.getElementById('signupModal');
+    const openLogin = document.getElementById('openLogin');
+    const openSignup = document.getElementById('openSignup');
+    const openLogin2 = document.getElementById('openLogin2');
+    const openSignup2 = document.getElementById('openSignup2');
+    const closeLogin = document.getElementById('closeLogin');
+    const closeSignup = document.getElementById('closeSignup');
+    const switchToSignup = document.getElementById('switchToSignup');
+    const switchToLogin = document.getElementById('switchToLogin');
+    
+    const open = m => (m.style.display = 'flex');
+    const close = m => (m.style.display = 'none');
+    
+    openLogin.onclick = () => open(loginModal);
+    openLogin2.onclick = () => open(loginModal);
+    openSignup.onclick = () => open(signupModal);
+    openSignup2.onclick = () => open(signupModal);
+    closeLogin.onclick = () => close(loginModal);
+    closeSignup.onclick = () => close(signupModal);
+    switchToSignup.onclick = e => { e.preventDefault();
+      close(loginModal);
+      open(signupModal); };
+    switchToLogin.onclick = e => { e.preventDefault();
+      close(signupModal);
+      open(loginModal); };
+    window.onclick = e => { if (e.target === loginModal) close(loginModal); if (e.target === signupModal) close(signupModal); };
+  </script>
+</body>
+
+</html>

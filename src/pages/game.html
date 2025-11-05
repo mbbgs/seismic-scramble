@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seismic - Scramble Game</title>
+
+  <meta name="title" content="Seismic - Game of Scramble">
+  <meta name="description" content="Play the Seismic Scramble game — test your blockchain privacy knowledge, earn points, and rise to the leaderboard.">
+  <meta name="keywords" content="Seismic, blockchain, scramble, privacy, cybersecurity, web3, game">
+  <meta name="author" content="Hound_tre, mbbgss">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            glossyPink: '#ff4f88',
+            neonWhite: '#ffffff',
+          },
+          boxShadow: {
+            glow: '0 0 25px rgba(255,79,136,0.4)',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    body {
+      background: radial-gradient(circle at top, #ffffff 0%, #ffe4ee 40%, #ffb9d0 100%);
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+
+<body class="text-gray-800 overflow-x-hidden">
+  <!-- GAME WRAPPER -->
+  <div class="min-h-screen flex flex-col items-center justify-start py-10 px-4">
+
+    <!-- HEADER -->
+    <header class="w-full max-w-6xl flex flex-col md:flex-row justify-between items-center border-b border-pink-100 pb-6 mb-10">
+      <div class="flex items-center gap-3 mb-4 md:mb-0">
+        <img src="/seismic.svg" alt="Seismic Logo" class="w-12 h-12 drop-shadow-glow" />
+        <h1 class="text-3xl font-extrabold text-glossyPink">SEISMIC SCRAMBLE</h1>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2">
+          <img src="/default-avatar.jpg" class="w-10 h-10 rounded-full border border-glossyPink shadow-glow" alt="User" />
+          <div class="text-sm text-gray-600">
+            <div class="font-semibold text-glossyPink">Guest</div>
+            <div class="text-xs text-gray-500">Score: 0</div>
+          </div>
+        </div>
+        <button class="px-4 py-2 text-glossyPink border border-glossyPink rounded-lg hover:bg-glossyPink hover:text-white transition font-semibold">Logout</button>
+      </div>
+    </header>
+
+    <!-- GAME STAGE -->
+    <main class="w-full max-w-5xl bg-white/60 backdrop-blur-sm border border-pink-100 rounded-2xl shadow-glow p-8 text-center">
+
+      <!-- SCRAMBLE DISPLAY -->
+      <div id="scrambleCard" class="mb-8">
+        <p id="levelHint" class="text-gray-500 text-sm mb-2">Press START to begin</p>
+        <h2 id="scrambledWord" class="text-4xl font-bold text-glossyPink tracking-widest drop-shadow-glow">— — — — —</h2>
+      </div>
+
+      <!-- INPUT -->
+      <div class="flex flex-col md:flex-row gap-4 justify-center mb-6">
+        <input id="guessInput" type="text" placeholder="Type your guess..." disabled
+          class="w-full md:w-1/2 p-3 rounded-xl border border-pink-100 text-gray-700 focus:outline-none focus:border-glossyPink" />
+        <button id="btnSubmit" disabled
+          class="px-6 py-3 bg-glossyPink text-white rounded-xl shadow-glow font-semibold hover:scale-105 transition-transform">Decrypt</button>
+      </div>
+
+      <!-- CONTROLS -->
+      <div class="flex flex-wrap justify-center gap-3 mb-10">
+        <button id="btnHint" class="px-4 py-2 border border-glossyPink text-glossyPink rounded-lg hover:bg-glossyPink hover:text-white transition font-semibold">Reveal Hint</button>
+        <button id="btnSkip" class="px-4 py-2 border border-glossyPink text-glossyPink rounded-lg hover:bg-glossyPink hover:text-white transition font-semibold">Skip</button>
+        <button id="btnStart" class="px-5 py-2 bg-glossyPink text-white rounded-lg shadow-glow font-semibold hover:scale-105 transition-transform">Start</button>
+      </div>
+
+      <!-- FEEDBACK + PROGRESS -->
+      <div id="feedback" class="text-glossyPink text-lg font-semibold mb-2">Score: <span id="miniScore">0</span></div>
+      <div class="w-full bg-pink-100 rounded-full h-2 overflow-hidden mb-6">
+        <div id="progressBar" class="bg-glossyPink h-full w-[0%] transition-all duration-300"></div>
+      </div>
+
+      <!-- STATS PANEL -->
+      <div class="flex justify-center gap-10 mb-10 text-gray-600">
+        <div>
+          <div class="text-sm">Correct</div>
+          <div id="correctCount" class="text-xl font-bold text-glossyPink">0</div>
+        </div>
+        <div>
+          <div class="text-sm">Attempts</div>
+          <div id="attemptCount" class="text-xl font-bold text-pink-400">0</div>
+        </div>
+        <div>
+          <div class="text-sm">Round</div>
+          <div id="roundInfo" class="text-xl font-bold text-gray-800">0 / 20</div>
+        </div>
+      </div>
+
+      <!-- HISTORY -->
+      <div id="historyList" class="text-gray-700 text-sm space-y-2 max-h-48 overflow-y-auto p-4 bg-white/70 rounded-xl border border-pink-100">
+        <div>Game ready — press START</div>
+      </div>
+
+      <!-- RESTART + RULES -->
+      <div class="flex justify-center gap-4 mt-8">
+        <button id="btnRestart" class="px-5 py-2 border border-glossyPink text-glossyPink rounded-lg hover:bg-glossyPink hover:text-white transition font-semibold">Restart</button>
+        <button id="btnRules" class="px-5 py-2 border border-glossyPink text-glossyPink rounded-lg hover:bg-glossyPink hover:text-white transition font-semibold">Rules</button>
+      </div>
+    </main>
+
+    <!-- CTA SECTION -->
+    <section class="mt-20 text-center">
+      <h2 class="text-2xl font-bold text-glossyPink mb-4">Ready to Learn More?</h2>
+      <p class="text-gray-600 mb-6">Seismic merges privacy with compliance — enabling trust without compromise.</p>
+      <div class="flex justify-center gap-4 flex-wrap">
+        <a href="https://seismic.systems" target="_blank"
+          class="px-6 py-3 bg-glossyPink text-white rounded-lg shadow-glow hover:scale-105 transition font-semibold">Visit Seismic</a>
+        <a href="https://docs.seismic.systems" target="_blank"
+          class="px-6 py-3 border border-glossyPink text-glossyPink rounded-lg hover:bg-glossyPink hover:text-white transition font-semibold">Docs</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="mt-20 py-8 border-t border-pink-100 text-center text-gray-500">
+    <p>Crafted by a <span class="text-glossyPink font-semibold">Seismicist</span></p>
+    <a href="https://x.com/hound_tre" target="_blank" class="inline-block mt-2 hover:text-glossyPink transition">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" class="inline">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.496 11.24h-6.66l-5.214-6.818-5.96 6.818H1.68l7.73-8.845L1.254 2.25h6.84l4.715 6.231zM17.093 19.71h1.832L7.02 4.072H5.048z" />
+      </svg>
+    </a>
+  </footer>
+
+  <script src="/conn.js"></script>
+  <script src="/main.js"></script>
+</body>
+</html>
