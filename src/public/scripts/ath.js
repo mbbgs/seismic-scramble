@@ -1,4 +1,4 @@
-import { API } from './cl.js';
+import { API } from 'cl.js';
 
 const signupModal = document.getElementById('signupModal');
 const loginModal = document.getElementById('loginModal');
