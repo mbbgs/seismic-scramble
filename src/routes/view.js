@@ -24,6 +24,7 @@ router.get("/stage", async (req, res) => {
     if (!user) {
       return res.redirect("/");
     }
+    
     const safeUser = {
       username: user.username,
       score: user.score,

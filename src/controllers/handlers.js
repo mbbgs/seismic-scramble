@@ -8,77 +8,79 @@ const SUSPICIOUS_TIME = 30000; // 30 seconds
 const CHEAT_SCORE = 10000;
 
 module.exports.submitScore = async function(req, res) {
-  try {
-    const { hash_id, score } = req.body;
-    const user_id = req.session?.user.user_id;
-    
-    if (!hash_id || !score) {
-      return sendJson(res, 400, false, "Missing required fields");
-    }
-    
-    const user = await User.findOne({
-      hash_id: { $eq: hash_id },
-      userId: { $eq: user_id }
-    });
-    
-    if (!user || !user.start_time) {
-      return sendJson(res, 400, false, "Invalid game session");
-    }
-    
-    const elapsed = Date.now() - new Date(user.start_time).getTime();
-    
-    if (elapsed > MAX_GAME_TIME) {
-      return sendJson(res, 400, false, "Game session expired");
-    }
-    
-    const timeBonus = Math.max(0, BASE_SCORE - (elapsed / 1000) * TIME_PENALTY_RATE);
-    const finalScore = Math.round(score + timeBonus);
-    
-    let radar = 'green';
-    if (elapsed < SUSPICIOUS_TIME || finalScore > CHEAT_SCORE) {
-      radar = 'red';
-    } else if (elapsed < SUSPICIOUS_TIME * 1.5 || finalScore > CHEAT_SCORE * 0.7) {
-      radar = 'orange';
-    }
-    
-    if (finalScore > user.score) {
-      user.score = finalScore;
-      user.radar = radar;
-      user.hash_id = null;
-      user.start_time = null;
-      await user.save();
-    }
-    
-    return sendJson(res, 200, true, "Score submitted", {
-      score: finalScore,
-      time: Math.round(elapsed / 1000),
-      radar: radar,
-      isHighScore: finalScore > user.score
-    });
-    
-  } catch (error) {
-    return sendJson(res, 500, false, "Internal Server Error");
-  }
+	try {
+		const { hash_id, score } = req.body;
+		const user_id = req.session?.user.user_id;
+		
+		if (!hash_id || !score) {
+			return sendJson(res, 400, false, "Missing required fields");
+		}
+		
+		const user = await User.findOne({
+			hash_id: { $eq: hash_id },
+			userId: { $eq: user_id }
+		});
+		
+		if (!user || !user.start_time) {
+			return sendJson(res, 400, false, "Invalid game session");
+		}
+		
+		const elapsed = Date.now() - new Date(user.start_time).getTime();
+		
+		if (elapsed > MAX_GAME_TIME) {
+			return sendJson(res, 400, false, "Game session expired");
+		}
+		
+		const timeBonus = Math.max(0, BASE_SCORE - (elapsed / 1000) * TIME_PENALTY_RATE);
+		const finalScore = Math.round(score + timeBonus);
+		
+		let radar = 'green';
+		if (elapsed < SUSPICIOUS_TIME || finalScore > CHEAT_SCORE) {
+			radar = 'red';
+		} else if (elapsed < SUSPICIOUS_TIME * 1.5 || finalScore > CHEAT_SCORE * 0.7) {
+			radar = 'orange';
+		}
+		
+		if (finalScore > user.score) {
+			user.score = finalScore;
+			user.radar = radar;
+			user.hash_id = null;
+			user.start_time = null;
+			await user.save();
+		}
+		
+		return sendJson(res, 200, true, "Score submitted", {
+			score: finalScore,
+			time: Math.round(elapsed / 1000),
+			radar: radar,
+			isHighScore: finalScore > user.score
+		});
+		
+	} catch (error) {
+		logError('Error submitting score', error)
+		return sendJson(res, 500, false, "Internal Server Error");
+	}
 };
 
 module.exports.startGame = async function(req, res) {
-  try {
-    
-    const user_id = req.session?.user.user_id;
-    const isUser = await User.findOne({ userId });
-    if (!isUser) {
-      return sendJson(res, 400, false, "Invalid request");
-    }
-    
-    const hash = crypto.randomBytes(16).toString('base64');
-    isUser.start_time = new Date();
-    isUser.hash_id = hash;
-    await isUser.save();
-    
-    return sendJson(res, 201, true, "Game initiated", { hash_id: hash });
-  } catch (error) {
-    return sendJson(res, 500, false, "Internal Server Error");
-  }
+	try {
+		
+		const user_id = req.session?.user.user_id;
+		const isUser = await User.findOne({ userId });
+		if (!isUser) {
+			return sendJson(res, 400, false, "Invalid request");
+		}
+		
+		const hash = crypto.randomBytes(16).toString('base64');
+		isUser.start_time = new Date();
+		isUser.hash_id = hash;
+		await isUser.save();
+		
+		return sendJson(res, 201, true, "Game initiated", { hash_id: hash });
+	} catch (error) {
+		logError('Error starting game', error);
+		return sendJson(res, 500, false, "Internal Server Error");
+	}
 };
 
 
