@@ -57,13 +57,16 @@
             <div class="text-xs text-gray-500">Score: 0</div>
           </div> -->
         <div class="user-info flex items-center gap-2">
-          <img src="/default-avatar.jpg" class="w-10 h-10 rounded-full border border-gray-900 shadow-glow grayscale" alt="User" />
+          <img src="<%= user.avatar %>" class="w-10 h-10 rounded-full border border-gray-900 shadow-glow grayscale" alt="<%= user.username %>" />
           <div class="text-sm text-gray-600">
-            <div class="username font-semibold text-gray-900">Guest</div>
-            <div class="score text-xs text-gray-500">Score: 0</div>
+            <div class="username font-semibold text-gray-900"><%= user.username %></div>
+            <div class="score text-xs text-gray-500">Score: <%= user.score %></div>
           </div>
         </div>
-        <button class="px-4 py-2 text-gray-900 border border-gray-900 rounded-lg hover:bg-gray-900 hover:text-white transition font-semibold">Logout</button>
+        
+        <a href="/logout" class="px-4 py-2 text-gray-900 border border-gray-900 rounded-lg hover:bg-gray-900 hover:text-white transition font-semibold">
+          Logout
+        </a>
       </div>
     </header>
     

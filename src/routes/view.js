@@ -27,6 +27,7 @@ router.get("/stage", requireAuth, async (req, res) => {
       username: user.username,
       score: user.score,
       radar: user.radar,
+      avatar: user.avatar
     };
     
     return safeRender(res, "game.html", safeUser);
@@ -57,6 +58,25 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/logout", async function(req, res) {
+  try {
+    const user = req.session?.user;
+    
+    if (!user) {
+      return res.redirect("/index.html");
+    }
+    
+    // Destroy session safely
+    await destroySession(req);
+    
+    res.clearCookie("ss-scramble.sid");
+    res.setHeader("Clear-Site-Data", '"cache","cookies","storage"');
+    return res.redirect("/index.html");
+  } catch (error) {
+    console.error("Error clearing user cookies:", error);
+    return res.status(500).redirect("/index.html");
+  }
+});
 
 
 module.exports = router;

@@ -123,10 +123,6 @@ module.exports.userLogin = async function(req, res) {
 	try {
 		const { username = '', password = '' } = req.body;
 		
-		// Clear existing session if present
-		if (req.session.user) {
-			req.session.user = null;
-		}
 		
 		// Validate input
 		if (!isValidInput(username.trim()) || !isValidInput(password.trim())) {
@@ -146,7 +142,6 @@ module.exports.userLogin = async function(req, res) {
 		}
 		
 		const sessionData = {
-			userId: isUser._id,
 			username: isUser.username,
 			user_id: isUser.user_id,
 			score: isUser.score,

@@ -15,6 +15,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const crypto = require("crypto");
 
 const User = require("./src/models/User.js");
+const { sessionMiddleware } = require('./src/middlewares/session.js')
 const { globalErrorHandler, notFoundHandler } = require("./src/middlewares/error.js");
 const apiRoutes = require("./src/routes/api.js");
 const viewRoutes = require("./src/routes/view.js");
@@ -133,7 +134,7 @@ const configureSecureSession = () => {
 
 app.use(session(configureSecureSession()));
 
-
+app.use(sessionMiddleware)
 
 app.use('/', appLimiter, apiRoutes)
 app.use('/', appLimiter, viewRoutes)

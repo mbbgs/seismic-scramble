@@ -11,7 +11,7 @@ const MAX_AGE = 3900 * 1000; // 1hr 5min
  * Basic login requirement check
  */
 
-const requireLogin = (req, res, next) => {
+const requireAuth = (req, res, next) => {
 	if (!req.session?.user) {
 		return sendJson(res, 401, false, "Not authenticated");
 	}
@@ -97,61 +97,11 @@ const destroySession = async function(req) {
 	});
 };
 
-/**
- * Helper to detect API requests
- */
-const isApiRequest = (req) => {
-	return req.xhr ||
-		req.accepts(['json', 'html']) === 'json' ||
-		req.path.startsWith('/bxz/') ||
-		req.path.startsWith('/auth/') ||
-		req.path.startsWith('/not/') ||
-		req.path.startsWith('/sxv/');
-};
-
-/**
- * Main authentication middleware
- * Handles both browser and API requests
- */
-const requireAuth = async function(req, res, next) {
-	try {
-		const user = req.session?.user;
-		const apiRequest = isApiRequest(req);
-		const currentPath = req.path;
-		
-		// Handle missing user session
-		if (!user) {
-			if (apiRequest) {
-				return sendJson(res, 401, false, 'User is not logged in');
-			}
-			return res.redirect(302, '/');
-		}
-		
-		// Handle unverified user
-		const { isVerified  } = user;
-		if (!isVerified) {
-			if (apiRequest) {
-				return sendJson(res, 403, false, 'User  is not verified');
-			}
-			return res.redirect(302, '/');
-		}
-		
-		next();
-	} catch (error) {
-		console.error("Error validating user:", error);
-		if (isApiRequest(req)) {
-			return sendJson(res, 500, false, 'Internal server error');
-		}
-		return res.redirect(302, '/error');
-	}
-};
-
 
 
 module.exports = {
 	saveSession,
 	requireLogin,
 	destroySession,
-	requireAuth,
 	sessionMiddleware
 };
