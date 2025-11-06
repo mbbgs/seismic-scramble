@@ -20,8 +20,7 @@ function safeRender(res, view, data = {}) {
 
 router.get("/stage", requireAuth, async (req, res) => {
   try {
-    
-    let user = req.session?.user
+    let user = req.session?.user;
     
     const safeUser = {
       username: user.username,
@@ -30,12 +29,13 @@ router.get("/stage", requireAuth, async (req, res) => {
       avatar: user.avatar
     };
     
-    return safeRender(res, "game.html", safeUser);
+    return safeRender(res, "game.html", { user: safeUser });
   } catch (error) {
     console.error("Error loading stage:", error);
     return res.status(500).render("error_500.html");
   }
 });
+
 
 router.get("/error", async (req, res) => {
   return res.status(500).render("error_500.html");
