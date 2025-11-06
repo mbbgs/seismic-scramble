@@ -18,7 +18,7 @@ const {
 } = require("../controllers/auth.js");
 
 const {
-  requireLogin
+  requireAuth
 } = require('../middlewares/session.js');
 
 const router = express.Router();
@@ -38,14 +38,14 @@ router.get("/leaderboard", getPublicLeaderboard);
 // ==========================================
 
 
-router.post("/game/start", requireLogin, startGame);
-router.post("/game/submit", requireLogin, submitScore);
+router.post("/game/start", requireAuth, startGame);
+router.post("/game/submit", requireAuth, submitScore);
 
 // User management
-//router.get("/user/profile", requireLogin, getUserProfile);
-router.post("/user/update-score", requireLogin, updateScore);
-router.get("/user/leaderboard", requireLogin, getPublicLeaderboard);
-router.post("/user/logout", requireLogin, logoutUser);
-router.delete("/user/account", requireLogin, deleteAccount);
+//router.get("/user/profile", requireAuth, getUserProfile);
+router.post("/user/update-score", requireAuth, updateScore);
+router.get("/user/leaderboard", requireAuth, getPublicLeaderboard);
+router.post("/user/logout", requireAuth, logoutUser);
+router.delete("/user/account", requireAuth, deleteAccount);
 
 module.exports = router;
