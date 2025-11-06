@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 
-const { requireAuth } = require("../middlewares/session.js");
+const { requireAuth, destroySession } = require("../middlewares/session.js");
 
 
 
@@ -58,14 +58,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/logout", async function(req, res) {
+router.get("/logout", requireAuth, async function(req, res) {
   try {
-    const user = req.session?.user;
-    
-    if (!user) {
-      return res.redirect("/index.html");
-    }
-    
     // Destroy session safely
     await destroySession(req);
     
