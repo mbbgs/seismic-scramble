@@ -54,7 +54,7 @@ router.get("/score/:hash_id", async (req, res) => {
     if (!dbUser) return res.redirect("/");
     
     if (dbUser.current_hash_id !== hash_id) {
-      return res.redirect(`/score/${dbUser.current_hash_id}`);
+      return res.redirect(`/score/${dbUser.hash_id}`);
     }
     
     const safeUser = {
