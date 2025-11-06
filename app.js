@@ -61,8 +61,9 @@ app.use(
           "https://cdnjs.cloudflare.com",
           "https://cdn.jsdelivr.net",
           "https://unpkg.com",
+          "https://cdn.tailwindcss.com"
         ],
-        styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net","https://cdn.tailwindcss.com"],
         imgSrc: ["'self'", "data:", "https:"],
         fontSrc: ["'self'", "data:"],
       },
