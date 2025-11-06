@@ -1,3 +1,93 @@
+export const API = {
+  
+  async request(endpoint, options = {}) {
+    try {
+      const response = await fetch(endpoint, {
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers
+        },
+        credentials: 'include',
+        ...options
+      });
+      
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || 'Request failed');
+      }
+      return data;
+    } catch (error) {
+      console.error('API Error:', error);
+      throw error;
+    }
+  },
+  
+  async startGame() {
+    return this.request('/game/start', {
+      method: 'POST'
+    });
+  },
+  
+  async submitScore(hash_id, score) {
+    return this.request('/game/submit', {
+      method: 'POST',
+      body: JSON.stringify({ hash_id, score })
+    });
+  },
+  
+  async getGameStatus() {
+    return this.request('/game/status', {
+      method: 'GET'
+    });
+  },
+  
+  async getUserProfile() {
+    return this.request('/user/profile', {
+      method: 'GET'
+    });
+  },
+  
+  async updateScore(score) {
+    return this.request('/user/update-score', {
+      method: 'POST',
+      body: JSON.stringify({ score })
+    });
+  },
+  
+  async getLeaderboard(limit = 50, page = 1) {
+    return this.request(`/leaderboard?limit=${limit}&page=${page}`, {
+      method: 'GET'
+    });
+  },
+  
+  async getPublicProfile(username) {
+    return this.request(`/profile/${username}`, {
+      method: 'GET'
+    });
+  },
+  
+  async login(username, password) {
+    return this.request('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ username, password })
+    });
+  },
+  
+  async signup(username, password) {
+    return this.request('/auth/signup', {
+      method: 'POST',
+      body: JSON.stringify({ username, password })
+    });
+  },
+  
+  async logout() {
+    return this.request('/user/logout', {
+      method: 'POST'
+    });
+  }
+};
+
+
 export class GameManager {
   constructor() {
     this.startTime = null;
@@ -112,5 +202,147 @@ export class GameManager {
     const elapsed = Date.now() - this.startTime;
     const remaining = this.maxGameTime - elapsed;
     return Math.max(0, Math.floor(remaining / 1000));
+  }
+}
+
+export class LeaderboardManager {
+  constructor(containerElement) {
+    this.container = containerElement;
+    this.currentPage = 1;
+    this.limit = 50;
+    this.isLoading = false;
+  }
+  
+  async loadLeaderboard(page = 1) {
+    if (this.isLoading) return;
+    
+    this.isLoading = true;
+    this.showLoading();
+    
+    try {
+      const response = await API.getLeaderboard(this.limit, page);
+      
+      if (response.success) {
+        this.currentPage = page;
+        this.renderLeaderboard(response.data.leaderboard);
+        this.renderPagination(response.data.pagination);
+      } else {
+        this.showError(response.message);
+      }
+    } catch (error) {
+      console.error('Error loading leaderboard:', error);
+      this.showError('Failed to load leaderboard');
+    } finally {
+      this.isLoading = false;
+    }
+  }
+  
+  renderLeaderboard(players) {
+    if (!this.container) return;
+    
+    const tbody = this.container.querySelector('tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    
+    players.forEach(player => {
+      const row = this.createLeaderboardRow(player);
+      tbody.appendChild(row);
+    });
+  }
+  
+  createLeaderboardRow(player) {
+    const tr = document.createElement('tr');
+    tr.className = 'hover:bg-gray-50 transition';
+    
+    // Rank with special styling for top 3
+    let rankClass = 'text-gray-900';
+    if (player.rank === 1) rankClass = 'text-gray-900 font-extrabold';
+    else if (player.rank === 2) rankClass = 'text-gray-800 font-bold';
+    else if (player.rank === 3) rankClass = 'text-gray-700 font-bold';
+    
+    tr.innerHTML = `
+      <td class="py-3 px-6 font-semibold ${rankClass}">${player.rank}</td>
+      <td class="py-3 px-6">
+        <div class="flex items-center gap-3">
+          <img src="${player.avatar || '/default-avatar.jpg'}" 
+               class="w-10 h-10 rounded-full border border-gray-200 shadow-sm grayscale" 
+               alt="${player.username}">
+          <span>${this.escapeHtml(player.username)}</span>
+        </div>
+      </td>
+      <td class="py-3 px-6 font-semibold">${player.score}</td>
+      <td class="py-3 px-6 text-gray-500">${player.radar || 'green'}</td>
+    `;
+    
+    return tr;
+  }
+  
+  renderPagination(pagination) {
+    if (!pagination) return;
+    
+    const paginationContainer = document.getElementById('pagination');
+    if (!paginationContainer) return;
+    
+    paginationContainer.innerHTML = `
+      <div class="flex justify-center items-center gap-4 mt-6">
+        <button 
+          id="prevPage" 
+          class="px-4 py-2 border border-gray-900 text-gray-900 rounded-lg hover:bg-gray-900 hover:text-white transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+          ${pagination.current_page === 1 ? 'disabled' : ''}
+        >
+          Previous
+        </button>
+        
+        <span class="text-gray-700">
+          Page ${pagination.current_page} of ${pagination.total_pages}
+        </span>
+        
+        <button 
+          id="nextPage" 
+          class="px-4 py-2 border border-gray-900 text-gray-900 rounded-lg hover:bg-gray-900 hover:text-white transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+          ${pagination.current_page === pagination.total_pages ? 'disabled' : ''}
+        >
+          Next
+        </button>
+      </div>
+    `;
+    
+    const prevBtn = document.getElementById('prevPage');
+    const nextBtn = document.getElementById('nextPage');
+    
+    if (prevBtn && pagination.current_page > 1) {
+      prevBtn.addEventListener('click', () => {
+        this.loadLeaderboard(pagination.current_page - 1);
+      });
+    }
+    
+    if (nextBtn && pagination.current_page < pagination.total_pages) {
+      nextBtn.addEventListener('click', () => {
+        this.loadLeaderboard(pagination.current_page + 1);
+      });
+    }
+  }
+  
+  showLoading() {
+    if (!this.container) return;
+    const tbody = this.container.querySelector('tbody');
+    if (tbody) {
+      tbody.innerHTML = '<tr><td colspan="4" class="py-8 text-center text-gray-500">Loading...</td></tr>';
+    }
+  }
+  
+  showError(message) {
+    if (!this.container) return;
+    const tbody = this.container.querySelector('tbody');
+    if (tbody) {
+      tbody.innerHTML = `<tr><td colspan="4" class="py-8 text-center text-red-600">${this.escapeHtml(message)}</td></tr>`;
+    }
+  }
+  
+  escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   }
 }
