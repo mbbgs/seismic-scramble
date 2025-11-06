@@ -88,48 +88,47 @@ app.use(
 );
 
 const configureSecureSession = () => {
-    const sessionConfig = {
-      name: 'ss-scramble.sid',
-      secret: process.env.SESSION_SECRET,
-      resave: false,
-      saveUninitialized: false,
-      rolling: true,
-      store: mongoStore.create({
-        mongoUrl: process.env.MONGODB_URI,
-        ttl: 60 * 60, // 1 hour 
-        autoRemove: 'native',
-      }),
-      cookie: {
-        secure: process.env.NODE_ENV === 'production', // Dynamic secure flag
-        maxAge: 1000 * 60 * 60, // 1 hour in milliseconds
-        sameSite: "strict",
-        httpOnly: true
-      }
-    };
-    
-    app.use(session(configureSecureSession));
-    
-    
-    
-    app.use('/', appLimiter, apiRoutes)
-    app.use('/', appLimiter, viewRoutes)
-    
-    
-    app.get("/robots.txt", (req, res) =>
-      res.sendFile(path.join(__dirname, "robots.txt"))
-    );
-    
-    app.get("/ndu", (req, res) =>
-      res.status(200).json({
-        status: "healthy",
-        message: "Service is running 🚀",
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime(),
-        memoryUsage: process.memoryUsage(),
-      })
-    );
-    
-    app.use(notFoundHandler);
-    app.use(globalErrorHandler);
-    
-    module.exports = app;
+  const sessionConfig = {
+    name: 'ss-scramble.sid',
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    rolling: true,
+    store: mongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      ttl: 60 * 60, // 1 hour 
+      autoRemove: 'native',
+    }),
+    cookie: {
+      secure: process.env.NODE_ENV === 'production', // Dynamic secure flag
+      maxAge: 1000 * 60 * 60, // 1 hour in milliseconds
+      sameSite: "strict",
+      httpOnly: true
+    }
+  };
+}
+app.use(session(configureSecureSession));
+
+
+
+app.use('/', appLimiter, apiRoutes)
+app.use('/', appLimiter, viewRoutes)
+
+
+app.get("/robots.txt", (req, res) =>
+  res.sendFile(path.join(__dirname, "robots.txt"))
+);
+
+app.get("/ndu", (req, res) =>
+  res.status(200).json({
+    status: "healthy",
+    message: "Service is running 🚀",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    memoryUsage: process.memoryUsage(),
+  }));
+
+app.use(notFoundHandler);
+app.use(globalErrorHandler);
+
+module.exports = app;
