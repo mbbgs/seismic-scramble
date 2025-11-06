@@ -26,8 +26,6 @@
                 "hpp": "^0.2.3",
                 "http": "0.0.1-security",
                 "mongoose": "^8.8.4",
-                "passport": "^0.7.0",
-                "passport-twitter-oauth2": "^2.1.1",
                 "winston": "^3.18.3"
         },
         "devDependencies": {
