@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema({
   hash_id: {
     type: String,
     required: true,
+    default:'',
     unique: true
   },
   avatar: {

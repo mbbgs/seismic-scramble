@@ -49,11 +49,18 @@
         <h1 class="text-3xl font-extrabold text-gray-900">SEISMIC SCRAMBLE</h1>
       </div>
       <div class="flex items-center gap-4">
-        <div class="flex items-center gap-2">
+        <!--   
+         <div class="flex items-center gap-2">
           <img src="/default-avatar.jpg" class="w-10 h-10 rounded-full border border-gray-900 shadow-glow grayscale" alt="User" />
           <div class="text-sm text-gray-600">
             <div class="font-semibold text-gray-900">Guest</div>
             <div class="text-xs text-gray-500">Score: 0</div>
+          </div> -->
+        <div class="user-info flex items-center gap-2">
+          <img src="/default-avatar.jpg" class="w-10 h-10 rounded-full border border-gray-900 shadow-glow grayscale" alt="User" />
+          <div class="text-sm text-gray-600">
+            <div class="username font-semibold text-gray-900">Guest</div>
+            <div class="score text-xs text-gray-500">Score: 0</div>
           </div>
         </div>
         <button class="px-4 py-2 text-gray-900 border border-gray-900 rounded-lg hover:bg-gray-900 hover:text-white transition font-semibold">Logout</button>
@@ -137,7 +144,6 @@
   </footer>
   
   <script type="module" src="/cl.js"></script>
-  <script src="/main.js"></script>
   <script type="module" src="/game.js"></script>
 </body>
 

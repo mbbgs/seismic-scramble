@@ -69,13 +69,14 @@ module.exports.createUser = async function(req, res) {
 		const hashedPassword = await User.hashPassword(password.trim());
 		const userId = generateUserId();
 		const avatar = generateDefaultAvatar(uniqueUsername);
-		
+		const hash = crypto.randomBytes(16).toString('base64');
+
 		const userData = {
 			username: uniqueUsername,
 			password: hashedPassword,
 			user_id: userId,
 			avatar: avatar,
-			hash_id: "",
+			hash_id: hash,
 			score: 0
 		};
 		
