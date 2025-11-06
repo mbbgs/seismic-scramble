@@ -1,4 +1,4 @@
-const API = {
+export const API = {
   
   async request(endpoint, options = {}) {
     try {
@@ -88,7 +88,7 @@ const API = {
 };
 
 
-class GameManager {
+export class GameManager {
   constructor() {
     this.gameHash = null;
     this.startTime = null;
@@ -202,7 +202,7 @@ class GameManager {
 }
 
 
-class LeaderboardManager {
+export class LeaderboardManager {
   constructor(containerElement) {
     this.container = containerElement;
     this.currentPage = 1;
@@ -345,7 +345,7 @@ class LeaderboardManager {
 }
 
 
-class UserProfileManager {
+export class UserProfileManager {
   async loadProfile() {
     try {
       const response = await API.getUserProfile();
@@ -391,11 +391,3 @@ class UserProfileManager {
 }
 
 
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    API,
-    GameManager,
-    LeaderboardManager,
-    UserProfileManager
-  };
-}

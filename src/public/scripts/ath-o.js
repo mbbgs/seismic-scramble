@@ -44,7 +44,7 @@ if (loginForm) {
       showMessage(loginForm, 'Logging in...');
       const res = await API.login(username, password);
       showMessage(loginForm, res.message || 'Login successful!');
-
+      
       setTimeout(() => (window.location.href = '/stage'), 1000);
     } catch (err) {
       showMessage(loginForm, err.message || 'Login failed', true);
