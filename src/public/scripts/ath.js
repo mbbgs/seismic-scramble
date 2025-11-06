@@ -33,7 +33,7 @@ function showMessage(target, msg, isError = false) {
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
-// Signup handler
+
 signupInputs.button.addEventListener('click', async () => {
   const username = signupInputs.username.value.trim();
   const password = signupInputs.password.value.trim();
@@ -59,7 +59,7 @@ signupInputs.button.addEventListener('click', async () => {
   }
 });
 
-// Login handler
+
 loginInputs.button.addEventListener('click', async () => {
   const username = loginInputs.username.value.trim();
   const password = loginInputs.password.value.trim();

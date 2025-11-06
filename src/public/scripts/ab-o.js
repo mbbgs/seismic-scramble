@@ -4,66 +4,49 @@
     .alert {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.3);
+      background: rgba(0,0,0,0.6);
       display: flex;
       justify-content: center;
       align-items: center;
       z-index: 1000;
-      backdrop-filter: blur(2px);
-      transition: opacity 0.25s ease;
     }
-    .alert.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
+    .alert.hidden { display: none; }
     .alert-content {
-      background: #fff;
-      color: #222;
-      border-radius: 12px;
-      padding: 24px 28px;
-      width: 280px;
+      background: #111;
+      color: #eee;
+      border-radius: 10px;
+      padding: 20px 30px;
+      width: 250px;
       text-align: center;
-      font-family: system-ui, sans-serif;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-      animation: pop 0.25s ease-out;
+      box-shadow: 0 0 10px #000;
+      font-family: monospace;
+      border: 1px solid #333;
+      animation: fadeIn 0.3s ease;
     }
-
     .alert.success .alert-content {
-      border-top: 4px solid #2ecc71;
+      border-color: #1f8b4c;
+      color: #adffb4;
     }
-
     .alert.error .alert-content {
-      border-top: 4px solid #e74c3c;
+      border-color: #c0392b;
+      color: #ffb3b3;
     }
-
-    .alert-content p {
-      margin: 0;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-
     .alert-content button {
-      margin-top: 18px;
-      background: #007bff;
+      margin-top: 15px;
+      background: #333;
       color: #fff;
       border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
+      transition: background 0.2s;
     }
     .alert-content button:hover {
-      background: #0069e0;
+      background: #555;
     }
-    .alert-content button:active {
-      transform: scale(0.97);
-    }
-
-    @keyframes pop {
-      from { transform: translateY(10px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    @keyframes fadeIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
   `;
   document.head.appendChild(style);
@@ -78,8 +61,7 @@
     </div>
   `;
   document.body.appendChild(alertBox);
-  
-  window.showAlert = function(message, type = "success", duration = 4000) {
+    window.showAlert = function(message, type = "success", duration = 4000) {
     const box = document.getElementById("alertBox");
     const msg = document.getElementById("alertMessage");
     const ok = document.getElementById("alertOk");

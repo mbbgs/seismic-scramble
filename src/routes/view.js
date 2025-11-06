@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const User = require('../models/User.js')
 
 const { requireAuth, destroySession } = require("../middlewares/session.js");
 
@@ -115,17 +115,17 @@ router.get("/logout", async (req, res) => {
 router.get('/leaderboard', async (req, res) => {
   try {
     const sessionUser = req.session?.user;
-
+    
     const limit = parseInt(req.query.limit) || 50;
-
+    
     // Get top users by score
     const topPlayers = await User.find()
       .select('username user_id avatar score radar createdAt')
       .sort({ score: -1, createdAt: 1 })
       .limit(limit)
       .lean();
-
-
+    
+    
     const leaderboard = topPlayers.map((player, index) => ({
       rank: index + 1,
       username: player.username,
@@ -134,14 +134,14 @@ router.get('/leaderboard', async (req, res) => {
       score: player.score,
       radar: player.radar || '—'
     }));
-
+    
     const safeUser = {
       username: sessionUser.username,
       avatar: sessionUser.avatar,
       score: sessionUser.score,
       radar: sessionUser.radar
     };
-
+    
     return safeRender(res, 'leaderboard.html', { user: safeUser, leaderboard });
   } catch (error) {
     console.error('Error loading leaderboard:', error);
