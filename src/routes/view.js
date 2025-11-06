@@ -81,6 +81,11 @@ router.get("/not-found", async (req, res) => {
   return res.status(500).render("error_500.html");
 });
 
+router.get("/hehe", async (req, res) => {
+  return res.status(500).render("error_403.html");
+});
+
+
 // Homepage
 router.get("/", async (req, res) => {
   try {
@@ -97,18 +102,19 @@ router.get("/", async (req, res) => {
 router.get("/logout", async (req, res) => {
   try {
     
-    if (req.session?.user) {
-      return res.redirect("/");
+    if (!req.session?.user) {
+      return res.redirect("/hehe");
     }
+    
     // Destroy session safely
     await destroySession(req);
     
     res.clearCookie("ss-scramble.sid");
     res.setHeader("Clear-Site-Data", '"cache","cookies","storage"');
-    return res.redirect("/index.html");
+    return res.redirect("/");
   } catch (error) {
     console.error("Error clearing user cookies:", error);
-    return res.status(500).redirect("/index.html");
+    return res.status(500).redirect("/error");
   }
 });
 

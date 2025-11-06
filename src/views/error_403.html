@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>403 — Access Denied | Seismic Scramble</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            glossyGray: '#222222',
+            neonWhite: '#ffffff',
+            dangerRed: '#ff4b4b',
+          },
+          boxShadow: {
+            glow: '0 0 25px rgba(0,0,0,0.2)',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body {
+      background: radial-gradient(circle at top, #ffffff 0%, #eaeaea 40%, #bcbcbc 100%);
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="text-gray-800 overflow-x-hidden">
+
+  <section class="min-h-screen flex flex-col items-center justify-center text-center px-6">
+    <div class="mb-8">
+      <img src="/seismic.svg" alt="Seismic Logo" class="w-24 h-24 drop-shadow-glow mx-auto grayscale opacity-70">
+    </div>
+    
+    <h1 class="text-5xl font-extrabold text-dangerRed mb-4">403 — Access Denied</h1>
+    
+    <p class="text-gray-600 max-w-md mx-auto mb-8 text-lg leading-relaxed">
+      You tried to peek behind a locked door 😐<br>
+      Unfortunately, your credentials don’t pass the vibe check.
+    </p>
+    
+    <a href="/" class="px-8 py-3 bg-gray-900 text-white rounded-xl shadow-glow hover:scale-105 transition-transform font-semibold">
+      Go Back Home
+    </a>
+    
+    <div class="mt-12 text-gray-400">
+      <p class="text-sm uppercase tracking-wider">Restricted Zone</p>
+      <p class="text-6xl font-bold text-gray-300 mt-2">403</p>
+    </div>
+  </section>
+
+  <footer class="fixed bottom-0 w-full border-t border-gray-200 py-6 text-center text-gray-500 bg-white/50 backdrop-blur-sm">
+    <div class="max-w-6xl mx-auto px-4">
+      <p class="mb-2">Built by <span class="text-gray-900 font-semibold">Seismicist</span></p>
+      <div class="flex justify-center mt-2">
+        <a href="https://x.com/hound_tre" target="_blank" aria-label="Twitter / X" class="hover:text-gray-900 transition">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.496 11.24h-6.66l-5.214-6.818-5.96 6.818H1.68l7.73-8.845L1.254 2.25h6.84l4.715 6.231zM17.093 19.71h1.832L7.02 4.072H5.048z"/>
+          </svg>
+        </a>
+      </div>
+      <p class="mt-3 text-xs text-gray-400 italic">Access is earned... not given 😏</p>
+    </div>
+  </footer>
+
+</body>
+</html>
