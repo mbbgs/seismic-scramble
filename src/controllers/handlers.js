@@ -1,5 +1,5 @@
 const User = require('../models/User.js');
-const { sendJson } = require('../utils/helpers.js');
+const { sendJson,logError } = require('../utils/helpers.js');
 
 const MAX_GAME_TIME = 300000; // 5 minutes
 const BASE_SCORE = 1000;
