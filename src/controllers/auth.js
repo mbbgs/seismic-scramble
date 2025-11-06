@@ -61,8 +61,7 @@ module.exports.createUser = async function(req, res) {
 		const existingUser = await User.findOne({ username: username.trim() }).session(session);
 		if (existingUser) {
 			await session.abortTransaction();
-			//	return sendJson(res, 403, false, 'Username already in use');
-			return res.status(403).render('index.html', { message: "Username not available" })
+			return sendJson(res, 403, false, 'Username already in use');
 		}
 		
 		// Prepare user data
@@ -99,22 +98,19 @@ module.exports.createUser = async function(req, res) {
 		
 		// Commit transaction
 		await session.commitTransaction();
-		/*
+		
 		return sendJson(res, 201, true, 'Account created successfully', {
 			username: newUser[0].username
 		});
-		*/
-		return res.status(201).render('index.html', { message: "user created successfully" })
+		
 	} catch (error) {
 		await session.abortTransaction();
 		logError('Error creating user', error);
 		
 		if (error.message === 'User creation failed') {
-			//	return sendJson(res, 500, false, 'Account creation failed');
-			return res.status(500).redirect('error_500.html')
+			return sendJson(res, 500, false, 'Account creation failed');
 		}
-		//		return sendJson(res, 500, false, 'Internal server error occurred');
-		return res.status(500).redirect('error_500.html')
+		return sendJson(res, 500, false, 'Internal server error occurred');
 	} finally {
 		session.endSession();
 	}
@@ -133,22 +129,19 @@ module.exports.userLogin = async function(req, res) {
 		
 		// Validate input
 		if (!isValidInput(username.trim()) || !isValidInput(password.trim())) {
-			//	return sendJson(res, 400, false, 'Provide credentials to login');
-			return res.status(400).render('index.html', { message: "Provide credentials to login" })
+			return sendJson(res, 400, false, 'Provide credentials to login');
 		}
 		
 		// Find user by username
 		const isUser = await User.findOne({ username: username.trim() });
 		if (!isUser) {
-			//return sendJson(res, 404, false, 'User not found');
-			return res.status(404).render('index.html', { message: "user not found" })
+			return sendJson(res, 404, false, 'User not found');
 		}
 		
 		// Compare password
 		const isMatched = await isUser.comparePassword(password.trim());
 		if (!isMatched) {
-			// return sendJson(res, 401, false, 'Invalid credentials');
-			return res.status(401).render('index.html', { message: "incorrect username or password" })
+			return sendJson(res, 401, false, 'Invalid credentials');
 		}
 		
 		const sessionData = {
@@ -175,7 +168,7 @@ module.exports.userLogin = async function(req, res) {
 		// Save the session
 		await saveSession(req);
 		
-		/*
+		
 		return sendJson(res, 200, true, 'Login successful', {
 			username: isUser.username,
 			user_id: isUser.user_id,
@@ -183,13 +176,10 @@ module.exports.userLogin = async function(req, res) {
 			avatar: isUser.avatar,
 			joinedOn: isUser.createdAt.toDateString()
 		});
-		*/
-		return res.status(200).redirect('/stage')
 		
 	} catch (error) {
 		logError('Error logging in user', error);
-		//return sendJson(res, 500, false, 'Internal server error occurred');
-		return res.status(500).redirect('error_500.html')
+		return sendJson(res, 500, false, 'Internal server error occurred');
 	}
 };
 
@@ -258,7 +248,7 @@ module.exports.logoutUser = async function(req, res) {
 		
 		
 		res.setHeader('Clear-Site-Data', '"cache","cookies","storage"');
-		//return sendJson(res, 200, true, 'Logged out successfully');
+		return sendJson(res, 200, true, 'Logged out successfully');
 	} catch (error) {
 		logError('Error clearing user cookies', error);
 		return sendJson(res, 500, false, 'Internal server error occurred');

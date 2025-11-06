@@ -119,11 +119,11 @@
     <div class="bg-white p-8 rounded-2xl w-[90%] max-w-md border border-gray-200 shadow-glow relative">
       <button id="closeLogin" class="absolute top-3 right-4 text-gray-400 hover:text-gray-900 text-2xl">&times;</button>
       <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Login to Seismic</h2>
-      <form action="/auth/login" method="POST" class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4">
         <input type="text" name="username" placeholder="Username" required class="p-3 rounded-lg bg-white border border-gray-200 text-gray-700 focus:outline-none focus:border-gray-900" />
         <input type="password" name="password" placeholder="Password" required class="p-3 rounded-lg bg-white border border-gray-200 text-gray-700 focus:outline-none focus:border-gray-900" />
-        <button type="submit" class="mt-2 bg-gray-900 text-white py-3 rounded-xl font-semibold hover:scale-105 transition-transform">Login</button>
-      </form>
+        <button type="button" class="mt-2 bg-gray-900 text-white py-3 rounded-xl font-semibold hover:scale-105 transition-transform">Login</button>
+      </div>
       <p class="text-center text-gray-600 text-sm mt-4">Don't have an account? <a href="#" id="switchToSignup" class="text-gray-900 hover:underline">Sign up</a></p>
     </div>
   </div>
@@ -132,11 +132,11 @@
     <div class="bg-white p-8 rounded-2xl w-[90%] max-w-md border border-gray-200 shadow-glow relative">
       <button id="closeSignup" class="absolute top-3 right-4 text-gray-400 hover:text-gray-900 text-2xl">&times;</button>
       <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Create Your Account</h2>
-      <form action="/auth/signup" method="POST" class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4">
         <input type="text" name="username" placeholder="Username" required class="p-3 rounded-lg bg-white border border-gray-200 text-gray-700 focus:outline-none focus:border-gray-900" />
         <input type="password" name="password" placeholder="Password" required class="p-3 rounded-lg bg-white border border-gray-200 text-gray-700 focus:outline-none focus:border-gray-900" />
-        <button type="submit" class="mt-2 bg-gray-900 text-white py-3 rounded-xl font-semibold hover:scale-105 transition-transform">Sign Up</button>
-      </form>
+        <button type="button" class="mt-2 bg-gray-900 text-white py-3 rounded-xl font-semibold hover:scale-105 transition-transform">Sign Up</button>
+      </div>
       <p class="text-center text-gray-600 text-sm mt-4">Already have an account? <a href="#" id="switchToLogin" class="text-gray-900 hover:underline">Login</a></p>
     </div>
   </div>
