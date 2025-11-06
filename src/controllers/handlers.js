@@ -1,5 +1,5 @@
 const User = require('../models/User.js');
-const { sendJson,logError } = require('../utils/helpers.js');
+const { sendJson, logError } = require('../utils/helpers.js');
 
 const MAX_GAME_TIME = 300000; // 5 minutes
 const BASE_SCORE = 1000;
@@ -18,7 +18,7 @@ module.exports.submitScore = async function(req, res) {
 		
 		const user = await User.findOne({
 			hash_id: { $eq: hash_id },
-			userId: { $eq: user_id }
+			user_id: { $eq: user_id }
 		});
 		
 		if (!user || !user.start_time) {
@@ -66,7 +66,7 @@ module.exports.startGame = async function(req, res) {
 	try {
 		
 		const user_id = req.session?.user.user_id;
-		const isUser = await User.findOne({ userId });
+		const isUser = await User.findOne({ user_id });
 		if (!isUser) {
 			return sendJson(res, 400, false, "Invalid request");
 		}
@@ -98,9 +98,7 @@ module.exports.updateScore = async function(req, res) {
 		}
 		
 		// Update user score
-		const updatedUser = await User.findByIdAndUpdate(
-			user.userId, { $inc: { score: score } }, { new: true }
-		);
+		const updatedUser = await User.findOneAndUpdate({ user_id: user.user_id }, { $inc: { score: score } }, { new: true });
 		
 		if (!updatedUser) {
 			return sendJson(res, 404, false, 'User not found');
@@ -158,7 +156,7 @@ module.exports.getUserProfile = async function(req, res) {
 			return sendJson(res, 401, false, 'You are not authenticated');
 		}
 		
-		const userProfile = await User.findById(user.userId)
+		const userProfile = await User.findById(user.user_id)
 			.select('username user_id avatar score createdAt')
 			.lean();
 		
