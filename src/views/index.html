@@ -114,7 +114,7 @@
     </a>
   </footer>
   
-
+  
   <div id="loginModal" class="fixed inset-0 hidden items-center justify-center bg-white/80 backdrop-blur-sm z-50">
     <div class="bg-white p-8 rounded-2xl w-[90%] max-w-md border border-gray-200 shadow-glow relative">
       <button id="closeLogin" class="absolute top-3 right-4 text-gray-400 hover:text-gray-900 text-2xl">&times;</button>
@@ -140,7 +140,10 @@
       <p class="text-center text-gray-600 text-sm mt-4">Already have an account? <a href="#" id="switchToLogin" class="text-gray-900 hover:underline">Login</a></p>
     </div>
   </div>
-  
+  <noscript>
+    Fuckin turn on JavaScript 🙄
+  </noscript>
+  <script type="module" src="/ath.js"></script>
   <script>
     const loginModal = document.getElementById('loginModal');
     const signupModal = document.getElementById('signupModal');
@@ -162,12 +165,16 @@
     openSignup2.onclick = () => open(signupModal);
     closeLogin.onclick = () => close(loginModal);
     closeSignup.onclick = () => close(signupModal);
-    switchToSignup.onclick = e => { e.preventDefault();
+    switchToSignup.onclick = e => {
+      e.preventDefault();
       close(loginModal);
-      open(signupModal); };
-    switchToLogin.onclick = e => { e.preventDefault();
+      open(signupModal);
+    };
+    switchToLogin.onclick = e => {
+      e.preventDefault();
       close(signupModal);
-      open(loginModal); };
+      open(loginModal);
+    };
     window.onclick = e => { if (e.target === loginModal) close(loginModal); if (e.target === signupModal) close(signupModal); };
   </script>
 </body>

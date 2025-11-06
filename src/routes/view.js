@@ -36,13 +36,21 @@ router.get("/stage", requireAuth, async (req, res) => {
   }
 });
 
+router.get("/error", async (req, res) => {
+  return res.status(500).render("error_500.html");
+});
+
+router.get("/not-found", async (req, res) => {
+  return res.status(500).render("error_500.html");
+});
+
 // Homepage
 router.get("/", async (req, res) => {
   try {
     if (req.session?.user) {
       return res.redirect("/stage");
     }
-    return safeRender(res, "index.html",{});
+    return safeRender(res, "index.html", {});
   } catch (error) {
     console.error("Error loading homepage:", error);
     return res.status(500).render("error_500.html");
