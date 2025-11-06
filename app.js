@@ -87,6 +87,7 @@ app.use(
   })
 );
 
+/*
 const configureSecureSession = () => {
   const sessionConfig = {
     name: 'ss-scramble.sid',
@@ -106,8 +107,30 @@ const configureSecureSession = () => {
       httpOnly: true
     }
   };
-}
-app.use(session(configureSecureSession));
+}*/
+
+const configureSecureSession = () => {
+  return {
+    name: 'ss-scramble.sid',
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    rolling: true,
+    store: mongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      ttl: 60 * 60,
+      autoRemove: 'native',
+    }),
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 1000 * 60 * 60,
+      sameSite: "strict",
+      httpOnly: true
+    }
+  };
+};
+
+app.use(session(configureSecureSession()));
 
 
 
