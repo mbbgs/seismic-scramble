@@ -6,9 +6,10 @@ const { saveSession, destroySession } = require('../middlewares/session.js');
 const { sendJson, logError, validateInput: isValidInput } = require('../utils/helpers.js');
 
 const isPasswordComplex = (password) => {
-	const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+	const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 	return regex.test(password);
 };
+
 
 // Generate unique user_id
 function generateUserId() {
