@@ -12,7 +12,7 @@ function safeRender(res, view, data = {}) {
     res.render(view, data);
   } catch (err) {
     console.error(`Error rendering ${view}:`, err);
-    res.status(500).render("error_500.html");
+    res.status(500).redirect("/error");
   }
 }
 
@@ -35,7 +35,7 @@ router.get("/stage", async (req, res) => {
     return safeRender(res, "game.html", { user: safeUser });
   } catch (error) {
     console.error("Error loading stage:", error);
-    return res.status(500).render("error_500.html");
+    return res.status(500).redirect("/error");
   }
 });
 
@@ -68,7 +68,7 @@ router.get("/score/:hash_id", async (req, res) => {
   }
   catch (error) {
     console.error("Error loading score:", error);
-    return res.status(500).render("error_500.html");
+    return res.status(500).redirect("/error");
   }
 });
 
@@ -95,7 +95,7 @@ router.get("/", async (req, res) => {
     return safeRender(res, "index.html", {});
   } catch (error) {
     console.error("Error loading homepage:", error);
-    return res.status(500).render("error_500.html");
+    return res.status(500).redirect("/error");
   }
 });
 
@@ -120,9 +120,23 @@ router.get("/logout", async (req, res) => {
 
 router.get('/leaderboard', async (req, res) => {
   try {
+    
+    
     const sessionUser = req.session?.user;
+    const safeUser = {
+      username: 'Guest',
+      avatar: '/default-avatar.jpg',
+      score: 0,
+      radar: '-'
+    }
+    
     if (!sessionUser) {
-      return res.redirect('/')
+      safeUser = {
+        username: sessionUser.username,
+        avatar: sessionUser.avatar || '/default-avatar.jpg',
+        score: sessionUser.score,
+        radar: sessionUser.radar
+      };
     }
     const limit = parseInt(req.query.limit) || 50;
     
@@ -143,17 +157,12 @@ router.get('/leaderboard', async (req, res) => {
       radar: player.radar || '—'
     }));
     
-    const safeUser = {
-      username: sessionUser.username,
-      avatar: sessionUser.avatar,
-      score: sessionUser.score,
-      radar: sessionUser.radar
-    };
+    
     
     return safeRender(res, 'leaderboard.html', { user: safeUser, leaderboard });
   } catch (error) {
     console.error('Error loading leaderboard:', error);
-    return res.status(500).render('error_500.html');
+    return res.status(500).redirect('/error');
   }
 });
 
