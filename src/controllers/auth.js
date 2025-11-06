@@ -86,6 +86,7 @@ module.exports.createUser = async function(req, res) {
 			throw new Error('User creation failed');
 		}
 		
+		/* 
 		// Set session data
 		req.session.user = {
 			userId: newUser[0]._id,
@@ -96,6 +97,7 @@ module.exports.createUser = async function(req, res) {
 		
 		// Save session
 		await saveSession(req);
+		*/
 		
 		// Commit transaction
 		await session.commitTransaction();
@@ -145,6 +147,7 @@ module.exports.userLogin = async function(req, res) {
 			username: isUser.username,
 			user_id: isUser.user_id,
 			score: isUser.score,
+			radar: isUser.radar,
 			avatar: isUser.avatar,
 			lastLogin: new Date()
 		};

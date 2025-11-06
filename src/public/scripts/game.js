@@ -1,10 +1,8 @@
-import { GameManager, UserProfileManager } from './cl.js';
+import { GameManager } from './cl.js';
 
 
 
 const gameManager = new GameManager();
-const userProfileManager = new UserProfileManager();
-
 
 const btnStart = document.getElementById('btnStart');
 const btnSubmit = document.getElementById('btnSubmit');
@@ -233,18 +231,5 @@ btnRestart.addEventListener('click', restartGame);
 guessInput.addEventListener('keypress', (e) => {
 	if (e.key === 'Enter') {
 		checkAnswer();
-	}
-});
-
-// Load user profile on page load
-window.addEventListener('DOMContentLoaded', async () => {
-	const result = await userProfileManager.loadProfile();
-	if (result.success) {
-		// Update user info in header if elements exist
-		const usernameEl = document.querySelector('.user-info .username');
-		const scoreEl = document.querySelector('.user-info .score');
-		
-		if (usernameEl) usernameEl.textContent = result.profile.username;
-		if (scoreEl) scoreEl.textContent = `Score: ${result.profile.score}`;
 	}
 });
