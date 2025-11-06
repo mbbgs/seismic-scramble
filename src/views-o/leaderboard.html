@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard | Seismic Scramble</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="hero-logo">
+        <img src="/seismic.svg" alt="Seismic Logo">
+      </div>
+      <div class="logo-text">LEADERBOARD</div>
+      <div class="subtitle">
+        The minds that shook the system the hardest.<br>
+        Can you climb to the top?
+      </div>
+    </div>
+  </section>
+
+  <div class="game-wrap">
+    <header class="game-header">
+      <div class="brand">
+        <div class="logo">Seismic Champions</div>
+        <div class="tag">Top performers redefining privacy and precision</div>
+      </div>
+      <a href="/" class="btn primary">Back to Game</a>
+    </header>
+
+    <div class="leaderboard-list" style="width:100%; border-radius:12px; overflow:hidden; background:rgba(255,255,255,.7); border:1px solid rgba(90,55,68,.2);">
+      <table style="width:100%; border-collapse:collapse; text-align:left;">
+        <thead style="background:rgba(226,201,211,.3);">
+          <tr>
+            <th style="padding:12px 20px;">Rank</th>
+            <th style="padding:12px 20px;">User</th>
+            <th style="padding:12px 20px;">Score</th>
+            <th style="padding:12px 20px;">Radar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach((u, index) => { %>
+            <tr style="border-bottom:1px solid rgba(90,55,68,.1); transition:background .3s;">
+              <td style="padding:12px 20px; font-weight:600; color:#5a3744;"><%= index + 1 %></td>
+              <td style="padding:12px 20px; display:flex; align-items:center; gap:10px;">
+                <!-- 🖼️ Avatar -->
+                <img 
+                  src="<%= u.profile || '/default-avatar.jpg' %>" 
+                  alt="<%= u.username %>" 
+                  style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:1px solid rgba(90,55,68,.2); box-shadow:0 1px 5px rgba(0,0,0,.08);"
+                >
+                <span><%= u.username %></span>
+              </td>
+              <td style="padding:12px 20px;"><%= u.score %></td>
+              <td style="padding:12px 20px;"><%= u.radar || '—' %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer class="dev-footer">
+    <div class="dev-container">
+      <p class="credit">Built by <span>Seismicist</span></p>
+      <div class="social-links">
+        <a href="https://x.com/hound_tre" target="_blank" aria-label="Twitter / X">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.496 11.24h-6.66l-5.214-6.818-5.96 6.818H1.68l7.73-8.845L1.254 2.25h6.84l4.715 6.231zM17.093 19.71h1.832L7.02 4.072H5.048z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

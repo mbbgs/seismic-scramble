@@ -1,24 +1,21 @@
 const express = require("express");
 
-// Game/Submission handlers
+
 const {
   submitScore,
   startGame,
-  getUserProfile: getPublicUserProfile,
-  getLeaderboard: getPublicLeaderboard,
-  getCurrentGameStatus
+  updateScore,
+  getLeaderboard: getPublicLeaderboard
 } = require("../controllers/handlers.js");
 
-// User/Auth handlers
+
 const {
   createUser,
   userLogin,
   logoutUser,
-  updateScore,
-  getLeaderboard,
-  getUserProfile,
+  //getUserProfile,
   deleteAccount
-} = require("../controllers/user.js");
+} = require("../controllers/auth.js");
 
 const {
   requireLogin
@@ -34,7 +31,7 @@ router.post("/auth/login", userLogin);
 
 // Public leaderboard and profiles
 router.get("/leaderboard", getPublicLeaderboard);
-router.get("/profile/:username", getPublicUserProfile);
+//router.get("/profile/:username", getPublicUserProfile);
 
 // ==========================================
 // PROTECTED ROUTES (Authentication required)
@@ -43,10 +40,9 @@ router.get("/profile/:username", getPublicUserProfile);
 
 router.post("/game/start", requireLogin, startGame);
 router.post("/game/submit", requireLogin, submitScore);
-router.get("/game/status", requireLogin, getCurrentGameStatus);
 
 // User management
-router.get("/user/profile", requireLogin, getUserProfile);
+//router.get("/user/profile", requireLogin, getUserProfile);
 router.post("/user/update-score", requireLogin, updateScore);
 router.get("/user/leaderboard", requireLogin, getLeaderboard);
 router.post("/user/logout", requireLogin, logoutUser);

@@ -1,8 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
-const passport = require("passport");
-const MongoStore = require('connect-mongo');
+const mongoStore = require("connect-mongo")
 const mongoose = require("mongoose");
 const path = require("path");
 const helmet = require("helmet");
@@ -17,12 +16,12 @@ const crypto = require("crypto");
 
 const User = require("./src/models/User.js");
 const { globalErrorHandler, notFoundHandler } = require("./src/middlewares/error.js");
-const authRoutes = require("./src/routes/api.js");
-const gameRoutes = require("./src/routes/view.js");
+const apiRoutes = require("./src/routes/api.js");
+const viewRoutes = require("./src/routes/view.js");
 const { appLimiter } = require("./src/middlewares/limiter.js");
 
 const app = express();
-const MainRouter = express.Router()
+
 
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
@@ -84,113 +83,53 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
     credentials: true,
-    origin: process.env.CLIENT_URL,
+    origin: process.env.CLIENT_URL || "*",
   })
 );
 
-
-
-app.use(
-  session({
-    name: "seismic.sid",
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    rolling: true,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI,
-      touchAfter: 24 * 3600
-    }),
-    cookie: {
-      maxAge: 24 * 60 * 60 * 1000,
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production", 
-    },
-  })
-);
-app.use(passport.initialize());
-app.use(passport.session());
-
-/*
-passport.use(
-  new TwitterStrategy(
-    {
-      clientID: process.env.TWITTER_CLIENT_ID,
-      clientSecret: process.env.TWITTER_CLIENT_SECRET,
-      callbackURL: process.env.CALLBACK_URL,
-      scope: ["tweet.read", "users.read"],
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        let user = await User.findOne({ user_id: profile.id });
-        if (!user) {
-          user = new User({
-            user_id: profile.id,
-            username: profile.username,
-            profile: profile.photos?.[0]?.value || "",
-            radar: "green",
-            game_start: new Date(),
-            has_played: false,
-            is_verified: true,
-            score: 0,
-          });
-          await user.save();
-        } else {
-          user.username = profile.username;
-          user.profile = profile.photos?.[0]?.value || "";
-          await user.save();
-        }
-        done(null, user);
-      } catch (err) {
-        done(err, null);
+const configureSecureSession = () => {
+    const sessionConfig = {
+      name: 'ss-scramble.sid',
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      rolling: true,
+      store: mongoStore.create({
+        mongoUrl: process.env.MONGODB_URI,
+        ttl: 60 * 60, // 1 hour 
+        autoRemove: 'native',
+      }),
+      cookie: {
+        secure: process.env.NODE_ENV === 'production', // Dynamic secure flag
+        maxAge: 1000 * 60 * 60, // 1 hour in milliseconds
+        sameSite: "strict",
+        httpOnly: true
       }
-    }
-  )
-);
-
-passport.serializeUser((user, done) => done(null, { id: user.user_id }));
-passport.deserializeUser(async (obj, done) => {
-  try {
-    const user = await User.findOne({ user_id: obj.id });
-    done(null, user);
-  } catch (err) {
-    done(err, null);
-  }
-});
-*/
-
-passport.serializeUser((user, done) => done(null, user.user_id));
-passport.deserializeUser(async (id, done) => {
-  const user = await User.findOne({ user_id: id });
-  done(null, user);
-});
-
-
-MainRouter.use('/api', appLimiter, authRoutes)
-MainRouter.use('/', appLimiter, gameRoutes)
-
-
-console.log("Here ....")
-// Mount Main Router
-app.use('/', MainRouter);
-
-
-app.get("/robots.txt", (req, res) =>
-  res.sendFile(path.join(__dirname, "robots.txt"))
-);
-
-app.get("/ndu", (req, res) =>
-  res.status(200).json({
-    status: "healthy",
-    message: "Service is running 🚀",
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    memoryUsage: process.memoryUsage(),
-  })
-);
-
-app.use(notFoundHandler);
-app.use(globalErrorHandler);
-
-module.exports = app;
+    };
+    
+    app.use(session(configureSecureSession));
+    
+    
+    
+    app.use('/', appLimiter, apiRoutes)
+    app.use('/', appLimiter, viewRoutes)
+    
+    
+    app.get("/robots.txt", (req, res) =>
+      res.sendFile(path.join(__dirname, "robots.txt"))
+    );
+    
+    app.get("/ndu", (req, res) =>
+      res.status(200).json({
+        status: "healthy",
+        message: "Service is running 🚀",
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        memoryUsage: process.memoryUsage(),
+      })
+    );
+    
+    app.use(notFoundHandler);
+    app.use(globalErrorHandler);
+    
+    module.exports = app;

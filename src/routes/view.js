@@ -20,14 +20,16 @@ function safeRender(res, view, data = {}) {
 
 router.get("/stage", requireAuth, async (req, res) => {
   try {
+    
+    let user = req.session?.user
+    
     const safeUser = {
-      username: req.user.username,
-      profile: req.user.profile,
-      score: req.user.score,
-      radar: req.user.radar,
+      username: user.username,
+      score: user.score,
+      radar: user.radar,
     };
     
-    return safeRender(res, "index.html", safeUser);
+    return safeRender(res, "game.html", safeUser);
   } catch (error) {
     console.error("Error loading stage:", error);
     return res.status(500).render("error_500.html");
@@ -40,12 +42,7 @@ router.get("/", async (req, res) => {
     if (req.session?.user) {
       return res.redirect("/stage");
     }
-    return safeRender(res, "index.html", {
-      username: "",
-      profile: "",
-      score: "",
-      radar: "",
-    });
+    return safeRender(res, "index.html",{});
   } catch (error) {
     console.error("Error loading homepage:", error);
     return res.status(500).render("error_500.html");

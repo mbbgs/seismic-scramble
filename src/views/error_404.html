@@ -4,30 +4,64 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>404 — Page Not Found | Seismic Scramble</title>
-  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            glossyGray: '#333333',
+            neonWhite: '#ffffff',
+          },
+          boxShadow: {
+            glow: '0 0 25px rgba(0,0,0,0.2)',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body {
+      background: radial-gradient(circle at top, #ffffff 0%, #e8e8e8 40%, #c0c0c0 100%);
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
 </head>
-<body>
-  <section class="hero-section">
-    <div class="hero-content">
-      <div class="hero-logo">
-        <img src="/seismic.svg" alt="Seismic Logo">
-      </div>
-      <h1 style="font-size:2rem;">Error 404</h1>
-      <p class="subtitle">The page you’re looking for doesn’t exist or has been moved.</p>
-      <a href="/" class="btn primary">Return Home</a>
+<body class="text-gray-800 overflow-x-hidden">
+
+  <section class="min-h-screen flex flex-col items-center justify-center text-center px-6">
+    <div class="mb-8">
+      <img src="/seismic.svg" alt="Seismic Logo" class="w-24 h-24 drop-shadow-glow mx-auto grayscale opacity-70">
+    </div>
+    
+    <h1 class="text-5xl font-extrabold text-gray-900 mb-4">Error 404</h1>
+    
+    <p class="text-gray-600 max-w-md mx-auto mb-8 text-lg leading-relaxed">
+      The page you're looking for doesn't exist or has been moved.
+    </p>
+    
+    <a href="/" class="px-8 py-3 bg-gray-900 text-white rounded-xl shadow-glow hover:scale-105 transition-transform font-semibold">
+      Return Home
+    </a>
+    
+    <div class="mt-12 text-gray-400">
+      <p class="text-sm uppercase tracking-wider">Page Not Found</p>
+      <p class="text-6xl font-bold text-gray-300 mt-2">404</p>
     </div>
   </section>
-  <footer class="dev-footer">
-    <div class="dev-container">
-      <p class="credit">Built by <span>Seismicist</span></p>
-      <div class="social-links">
-        <a href="https://x.com/hound_tre" target="_blank" aria-label="Twitter / X">
+
+  <footer class="fixed bottom-0 w-full border-t border-gray-200 py-6 text-center text-gray-500 bg-white/50 backdrop-blur-sm">
+    <div class="max-w-6xl mx-auto px-4">
+      <p class="mb-2">Built by <span class="text-gray-900 font-semibold">Seismicist</span></p>
+      <div class="flex justify-center mt-2">
+        <a href="https://x.com/hound_tre" target="_blank" aria-label="Twitter / X" class="hover:text-gray-900 transition">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
-            <path d="M18.244 2.25h3.308l-7.227 8.26 8.496 11.24h-6.66l-5.214-6.818-5.96 6.818H1.68l7.73-8.845L1.254 2.25h6.84l4.715 6.231zM17.093 19.71h1.832L7.02 4.072H5.048z" />
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.496 11.24h-6.66l-5.214-6.818-5.96 6.818H1.68l7.73-8.845L1.254 2.25h6.84l4.715 6.231zM17.093 19.71h1.832L7.02 4.072H5.048z"/>
           </svg>
         </a>
       </div>
     </div>
   </footer>
+
 </body>
 </html>

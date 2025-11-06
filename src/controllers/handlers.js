@@ -10,7 +10,7 @@ const CHEAT_SCORE = 10000;
 module.exports.submitScore = async function(req, res) {
   try {
     const { hash_id, score } = req.body;
-    const user_id = req.user?.user_id;
+    const user_id = req.session?.user.user_id;
     
     if (!hash_id || !score) {
       return sendJson(res, 400, false, "Missing required fields");
@@ -63,9 +63,8 @@ module.exports.submitScore = async function(req, res) {
 
 module.exports.startGame = async function(req, res) {
   try {
-    const  user = req.user;
-    const userId = user.user_id;
     
+    const user_id = req.session?.user.user_id;
     const isUser = await User.findOne({ userId });
     if (!isUser) {
       return sendJson(res, 400, false, "Invalid request");
@@ -82,40 +81,107 @@ module.exports.startGame = async function(req, res) {
   }
 };
 
-module.exports.getUserProfile = async (req, res) => {
-  try {
-    const { username } = req.params;
-    
-    const user = await User.findOne({ username })
-      .select('username profile radar score created_at')
-      .lean();
-    
-    if (!user) {
-      return sendJson(res, 404, false, "User not found");
-    }
-    
-    return sendJson(res, 200, true, "User data", { user });
-  } catch (err) {
-    return sendJson(res, 500, false, "Error fetching profile");
-  }
+
+module.exports.updateScore = async function(req, res) {
+	try {
+		const user = req.session?.user;
+		const { score } = req.body;
+		
+		if (!user) {
+			return sendJson(res, 401, false, 'You are not authenticated');
+		}
+		
+		if (typeof score !== 'number' || score < 0) {
+			return sendJson(res, 400, false, 'Invalid score value');
+		}
+		
+		// Update user score
+		const updatedUser = await User.findByIdAndUpdate(
+			user.userId, { $inc: { score: score } }, { new: true }
+		);
+		
+		if (!updatedUser) {
+			return sendJson(res, 404, false, 'User not found');
+		}
+		
+		// Update session
+		req.session.user.score = updatedUser.score;
+		await saveSession(req);
+		
+		return sendJson(res, 200, true, 'Score updated successfully', {
+			score: updatedUser.score
+		});
+		
+	} catch (error) {
+		logError('Error updating score', error);
+		return sendJson(res, 500, false, 'Internal server error occurred');
+	}
 };
 
-module.exports.getLeaderboard = async (req, res) => {
-  try {
-    const limit = Math.min(Math.max(parseInt(req.query.limit) || 10, 1), 100);
-    
-    const users = await User.find()
-      .select('username profile score radar created_at -_id')
-      .sort({ score: -1 })
-      .limit(limit)
-      .lean();
-    
-    return res.status(200).json({
-      success: true,
-      data: users,
-      count: users.length
-    });
-  } catch (err) {
-    return sendJson(res, 500, false, "Error fetching leaderboard");
-  }
+module.exports.getLeaderboard = async function(req, res) {
+	try {
+		const limit = parseInt(req.query.limit) || 50;
+		
+		// Get top players by score
+		const topPlayers = await User.find()
+			.select('username user_id avatar score createdAt')
+			.sort({ score: -1, createdAt: 1 })
+			.limit(limit)
+			.lean();
+		
+		// Add rank to each player
+		const leaderboard = topPlayers.map((player, index) => ({
+			rank: index + 1,
+			username: player.username,
+			user_id: player.user_id,
+			avatar: player.avatar,
+			score: player.score
+		}));
+		
+		return sendJson(res, 200, true, 'Leaderboard fetched successfully', {
+			leaderboard
+		});
+		
+	} catch (error) {
+		logError('Error fetching leaderboard', error);
+		return sendJson(res, 500, false, 'Internal server error occurred');
+	}
+};
+
+module.exports.getUserProfile = async function(req, res) {
+	try {
+		const user = req.session?.user;
+		
+		if (!user) {
+			return sendJson(res, 401, false, 'You are not authenticated');
+		}
+		
+		const userProfile = await User.findById(user.userId)
+			.select('username user_id avatar score createdAt')
+			.lean();
+		
+		if (!userProfile) {
+			return sendJson(res, 404, false, 'User not found');
+		}
+		
+		// Get user's rank
+		const rank = await User.countDocuments({
+			$or: [
+				{ score: { $gt: userProfile.score } },
+				{
+					score: userProfile.score,
+					createdAt: { $lt: userProfile.createdAt }
+				}
+			]
+		}) + 1;
+		
+		return sendJson(res, 200, true, 'Profile fetched successfully', {
+			...userProfile,
+			rank
+		});
+		
+	} catch (error) {
+		logError('Error fetching user profile', error);
+		return sendJson(res, 500, false, 'Internal server error occurred');
+	}
 };
