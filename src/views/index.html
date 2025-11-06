@@ -120,7 +120,7 @@
       <button id="closeLogin" class="absolute top-3 right-4 text-gray-400 hover:text-gray-900 text-2xl">&times;</button>
       <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Login to Seismic</h2>
       <form action="/auth/login" method="POST" class="flex flex-col gap-4">
-        <input type="email" name="email" placeholder="Email" required class="p-3 rounded-lg bg-white border border-gray-200 text-gray-700 focus:outline-none focus:border-gray-900" />
+        <input type="text" name="username" placeholder="Username" required class="p-3 rounded-lg bg-white border border-gray-200 text-gray-700 focus:outline-none focus:border-gray-900" />
         <input type="password" name="password" placeholder="Password" required class="p-3 rounded-lg bg-white border border-gray-200 text-gray-700 focus:outline-none focus:border-gray-900" />
         <button type="submit" class="mt-2 bg-gray-900 text-white py-3 rounded-xl font-semibold hover:scale-105 transition-transform">Login</button>
       </form>
@@ -134,7 +134,6 @@
       <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Create Your Account</h2>
       <form action="/auth/signup" method="POST" class="flex flex-col gap-4">
         <input type="text" name="username" placeholder="Username" required class="p-3 rounded-lg bg-white border border-gray-200 text-gray-700 focus:outline-none focus:border-gray-900" />
-        <input type="email" name="email" placeholder="Email" required class="p-3 rounded-lg bg-white border border-gray-200 text-gray-700 focus:outline-none focus:border-gray-900" />
         <input type="password" name="password" placeholder="Password" required class="p-3 rounded-lg bg-white border border-gray-200 text-gray-700 focus:outline-none focus:border-gray-900" />
         <button type="submit" class="mt-2 bg-gray-900 text-white py-3 rounded-xl font-semibold hover:scale-105 transition-transform">Sign Up</button>
       </form>
