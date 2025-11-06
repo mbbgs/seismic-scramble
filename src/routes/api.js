@@ -42,7 +42,6 @@ router.post("/game/submit", requireAuth, submitScore);
 // User management
 router.get("/user/profile", requireAuth, getUserProfile);
 router.post("/user/update-score", requireAuth, updateScore);
-router.get("/user/leaderboard", requireAuth, getPublicLeaderboard);
 router.post("/user/logout", requireAuth, logoutUser);
 router.delete("/user/account", requireAuth, deleteAccount);
 
