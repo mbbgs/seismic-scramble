@@ -115,7 +115,9 @@ router.get("/logout", async (req, res) => {
 router.get('/leaderboard', async (req, res) => {
   try {
     const sessionUser = req.session?.user;
-    
+    if (!sessionUser) {
+      return res.redirect('/')
+    }
     const limit = parseInt(req.query.limit) || 50;
     
     // Get top users by score
