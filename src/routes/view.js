@@ -120,33 +120,31 @@ router.get("/logout", async (req, res) => {
 
 router.get('/leaderboard', async (req, res) => {
   try {
-    
-    
     const sessionUser = req.session?.user;
-    const safeUser = {
+    
+    let safeUser = {
       username: 'Guest',
       avatar: '/default-avatar.jpg',
       score: 0,
       radar: '-'
-    }
+    };
     
-    if (!sessionUser) {
+    if (sessionUser) {
       safeUser = {
         username: sessionUser.username,
         avatar: sessionUser.avatar || '/default-avatar.jpg',
-        score: sessionUser.score,
-        radar: sessionUser.radar
+        score: sessionUser.score || 0,
+        radar: sessionUser.radar || '-'
       };
     }
+    
     const limit = parseInt(req.query.limit) || 50;
     
-    // Get top users by score
     const topPlayers = await User.find()
       .select('username user_id avatar score radar createdAt')
       .sort({ score: -1, createdAt: 1 })
       .limit(limit)
       .lean();
-    
     
     const leaderboard = topPlayers.map((player, index) => ({
       rank: index + 1,
@@ -157,13 +155,12 @@ router.get('/leaderboard', async (req, res) => {
       radar: player.radar || '—'
     }));
     
-    
-    
     return safeRender(res, 'leaderboard.html', { user: safeUser, leaderboard });
   } catch (error) {
     console.error('Error loading leaderboard:', error);
     return res.status(500).redirect('/error');
   }
 });
+
 
 module.exports = router;
