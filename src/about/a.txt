@@ -1,2 +1,16 @@
 Seismic Game is a web-based scramble challenge where players test their knowledge of blockchain privacy concepts. The app connects with X to  get their profile and show scores on a public leaderboard
 
+  <section class="min-h-screen flex flex-col items-center justify-center text-center px-6">
+    <img src="/seismic.svg" alt="Seismic Logo" class="w-28 h-28 mb-6 drop-shadow-[0_0_15px_rgba(0,0,0,0.3)] animate-bounce grayscale" />
+    <h1 class="text-5xl font-extrabold text-gray-900 mb-3">SEISMIC SCRAMBLE</h1>
+    <p class="max-w-2xl text-gray-600 leading-relaxed text-lg mb-3">
+      Think you understand how privacy shakes the system?<br>
+      Decode the <strong>Seismic Network</strong> — one scrambled word at a time.<br>
+      Prove your knowledge of blockchain privacy.
+    </p>
+    <p class="text-gray-700 text-lg italic mb-8 animate-pulse">Privacy. Precision. Play.</p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <button id="openLogin" class="px-8 py-3 bg-gray-900 text-white rounded-xl shadow-glow hover:scale-105 transition-transform font-semibold">Login</button>
+      <button id="openSignup" class="px-8 py-3 border border-gray-900 text-gray-900 rounded-xl hover:bg-gray-900 hover:text-white transition font-semibold">Sign Up</button>
+    </div>
+  </section>

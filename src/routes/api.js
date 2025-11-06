@@ -4,8 +4,7 @@ const express = require("express");
 const {
   submitScore,
   startGame,
-  updateScore,
-  getLeaderboard: getPublicLeaderboard
+  updateScore
 } = require("../controllers/handlers.js");
 
 
@@ -30,7 +29,6 @@ router.post("/auth/signup", createUser);
 router.post("/auth/login", userLogin);
 
 // Public leaderboard and profiles
-router.get("/leaderboard", getPublicLeaderboard);
 //router.get("/profile/:username", getPublicUserProfile);
 
 // ==========================================

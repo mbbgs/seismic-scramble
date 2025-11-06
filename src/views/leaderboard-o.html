@@ -30,8 +30,8 @@
 </head>
 
 <body class="text-gray-800 overflow-x-hidden">
-
-  <!-- Hero Section -->
+  
+  
   <section class="flex flex-col items-center justify-center text-center py-16">
     <div class="mb-6">
       <img src="/seismic.svg" alt="Seismic Logo" class="w-20 h-20 drop-shadow-glow mx-auto grayscale">
@@ -41,27 +41,19 @@
       The minds that shook the system the hardest.<br>
       Can you climb to the top?
     </p>
-
-    <!-- Current User Info -->
-    <div class="flex items-center justify-center gap-3 mt-6">
-      <img src="<%= user.avatar %>" alt="<%= user.username %>" class="w-10 h-10 rounded-full border border-gray-900 grayscale">
-      <div class="text-left">
-        <div class="font-semibold text-gray-800"><%= user.username %></div>
-        <div class="text-sm text-gray-500">Score: <%= user.score %> | Radar: <%= user.radar || '—' %></div>
-      </div>
-    </div>
   </section>
-
-  <!-- Table Section -->
+  
   <div class="max-w-5xl mx-auto px-4 pb-20">
+    
     <header class="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-gray-200 pb-6 mb-8">
       <div>
         <h2 class="text-2xl font-bold text-gray-900">Seismic Champions</h2>
         <p class="text-sm text-gray-500">Top performers redefining privacy and precision</p>
       </div>
-      <a href="/stage" class="px-5 py-2 bg-gray-900 text-white rounded-lg shadow-glow hover:scale-105 transition font-semibold">Back to Game</a>
+      <a href="/" class="px-5 py-2 bg-gray-900 text-white rounded-lg shadow-glow hover:scale-105 transition font-semibold">Back to Game</a>
     </header>
-
+    
+    
     <div class="bg-white/70 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-glow overflow-hidden">
       <table class="w-full text-left">
         <thead class="bg-gray-100 text-gray-700">
@@ -72,24 +64,40 @@
             <th class="py-3 px-6 font-semibold">Radar</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200">
-          <% leaderboard.forEach(player => { %>
-            <tr class="hover:bg-gray-50 transition">
-              <td class="py-3 px-6 font-semibold text-gray-900"><%= player.rank %></td>
-              <td class="py-3 px-6 flex items-center gap-3">
-                <img src="<%= player.avatar %>" class="w-10 h-10 rounded-full border border-gray-200 shadow-sm grayscale" alt="<%= player.username %>">
-                <span><%= player.username %></span>
-              </td>
-              <td class="py-3 px-6 font-semibold"><%= player.score %></td>
-              <td class="py-3 px-6 text-gray-500"><%= player.radar %></td>
-            </tr>
-          <% }) %>
+        <tbody id="leaderboardBody" class="divide-y divide-gray-200">
+          
+          <tr class="hover:bg-gray-50 transition">
+            <td class="py-3 px-6 font-semibold text-gray-900">1</td>
+            <td class="py-3 px-6 flex items-center gap-3">
+              <img src="/default-avatar.jpg" class="w-10 h-10 rounded-full border border-gray-200 shadow-sm grayscale" alt="User">
+              <span>dessxvii</span>
+            </td>
+            <td class="py-3 px-6 font-semibold">950</td>
+            <td class="py-3 px-6 text-gray-500">High</td>
+          </tr>
+          <tr class="hover:bg-gray-50 transition">
+            <td class="py-3 px-6 font-semibold text-gray-900">2</td>
+            <td class="py-3 px-6 flex items-center gap-3">
+              <img src="/default-avatar.jpg" class="w-10 h-10 rounded-full border border-gray-200 shadow-sm grayscale" alt="User">
+              <span>spottfehler</span>
+            </td>
+            <td class="py-3 px-6 font-semibold">870</td>
+            <td class="py-3 px-6 text-gray-500">Mid</td>
+          </tr>
+          <tr class="hover:bg-gray-50 transition">
+            <td class="py-3 px-6 font-semibold text-gray-900">3</td>
+            <td class="py-3 px-6 flex items-center gap-3">
+              <img src="/default-avatar.jpg" class="w-10 h-10 rounded-full border border-gray-200 shadow-sm grayscale" alt="User">
+              <span>mbbgs</span>
+            </td>
+            <td class="py-3 px-6 font-semibold">820</td>
+            <td class="py-3 px-6 text-gray-500">Low</td>
+          </tr>
         </tbody>
       </table>
     </div>
   </div>
-
-  <!-- Footer -->
+  
   <footer class="border-t border-gray-200 py-8 text-center text-gray-500">
     <p>Built by <span class="text-gray-900 font-semibold">Seismicist</span></p>
     <a href="https://x.com/hound_tre" target="_blank" class="inline-block mt-2 hover:text-gray-900 transition">
@@ -98,7 +106,12 @@
       </svg>
     </a>
   </footer>
-
-  <noscript>Fuckin turn on JavaScript 🙄</noscript>
+  <noscript>
+    Fuckin turn on JavaScript 🙄
+  </noscript>
+    <script type="text/javascript" src="/ab.js" charset="utf-8"></script>
+  <script type="module" src="/cl.js"></script>
+  <script type="module" src="/leaderboard.js"></script>
 </body>
+
 </html>
