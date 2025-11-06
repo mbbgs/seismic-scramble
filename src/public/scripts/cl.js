@@ -389,5 +389,3 @@ export class UserProfileManager {
     return div.innerHTML;
   }
 }
-
-

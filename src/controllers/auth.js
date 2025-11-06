@@ -70,7 +70,7 @@ module.exports.createUser = async function(req, res) {
 		const userId = generateUserId();
 		const avatar = generateDefaultAvatar(uniqueUsername);
 		const hash = crypto.randomBytes(16).toString('base64');
-
+		
 		const userData = {
 			username: uniqueUsername,
 			password: hashedPassword,
@@ -247,6 +247,44 @@ module.exports.logoutUser = async function(req, res) {
 		return sendJson(res, 200, true, 'Logged out successfully');
 	} catch (error) {
 		logError('Error clearing user cookies', error);
+		return sendJson(res, 500, false, 'Internal server error occurred');
+	}
+};
+
+module.exports.getUserProfile = async function(req, res) {
+	try {
+		const user = req.session?.user;
+		
+		if (!user) {
+			return sendJson(res, 401, false, 'You are not authenticated');
+		}
+		
+		const userProfile = await User.findById(user.userId)
+			.select('username user_id avatar score createdAt')
+			.lean();
+		
+		if (!userProfile) {
+			return sendJson(res, 404, false, 'User not found');
+		}
+		
+		// Get user's rank
+		const rank = await User.countDocuments({
+			$or: [
+				{ score: { $gt: userProfile.score } },
+				{
+					score: userProfile.score,
+					createdAt: { $lt: userProfile.createdAt }
+				}
+			]
+		}) + 1;
+		
+		return sendJson(res, 200, true, 'Profile fetched successfully', {
+			...userProfile,
+			rank
+		});
+		
+	} catch (error) {
+		logError('Error fetching user profile', error);
 		return sendJson(res, 500, false, 'Internal server error occurred');
 	}
 };

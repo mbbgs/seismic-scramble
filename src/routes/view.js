@@ -18,10 +18,12 @@ function safeRender(res, view, data = {}) {
 
 
 
-router.get("/stage", requireAuth, async (req, res) => {
+router.get("/stage", async (req, res) => {
   try {
     let user = req.session?.user;
-    
+    if (!user) {
+      return res.redirect("/");
+    }
     const safeUser = {
       username: user.username,
       score: user.score,
@@ -58,8 +60,12 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/logout", requireAuth, async function(req, res) {
+router.get("/logout", async (req, res) => {
   try {
+    
+    if (req.session?.user) {
+      return res.redirect("/");
+    }
     // Destroy session safely
     await destroySession(req);
     

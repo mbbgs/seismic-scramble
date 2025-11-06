@@ -13,7 +13,7 @@ const {
   createUser,
   userLogin,
   logoutUser,
-  //getUserProfile,
+  getUserProfile,
   deleteAccount
 } = require("../controllers/auth.js");
 
@@ -42,7 +42,7 @@ router.post("/game/start", requireAuth, startGame);
 router.post("/game/submit", requireAuth, submitScore);
 
 // User management
-//router.get("/user/profile", requireAuth, getUserProfile);
+router.get("/user/profile", requireAuth, getUserProfile);
 router.post("/user/update-score", requireAuth, updateScore);
 router.get("/user/leaderboard", requireAuth, getPublicLeaderboard);
 router.post("/user/logout", requireAuth, logoutUser);
