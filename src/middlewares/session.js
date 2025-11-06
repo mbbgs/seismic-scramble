@@ -101,7 +101,7 @@ const destroySession = async function(req) {
 
 module.exports = {
 	saveSession,
-	requireLogin,
+	requireAuth,
 	destroySession,
 	sessionMiddleware
 };
