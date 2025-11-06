@@ -150,15 +150,15 @@ function skipWord() {
 }
 
 async function startGame() {
-	// Start game session on server
 	const result = await gameManager.startGame();
 	
 	if (!result.success) {
-		alert(result.message || 'Failed to start game');
+		window.showAlert(result.message || 'Failed to start game', 'error');
 		return;
 	}
 	
-	// Reset game state
+	localStorage.setItem('hash_id', result.hash_id);
+	
 	currentRound = 0;
 	correctAnswers = 0;
 	attempts = 0;
@@ -178,15 +178,15 @@ async function startGame() {
 }
 
 async function endGame() {
-	// Submit final score
-	const result = await gameManager.submitScore(gameScore);
+	const hash_id = localStorage.getItem('hash_id');
+	const result = await gameManager.submitScore(gameScore, hash_id);
 	
 	if (result.success) {
 		const data = result.data;
-		alert(`Game Over!\n\nFinal Score: ${data.score}\nTime: ${data.time}s\nRadar: ${data.radar}\n${data.isHighScore ? '🎉 New High Score!' : ''}`);
-		// window.location.href = `/results?score=${data.score}`;
+		
+		window.location.href = `/score/${hash_id}`;
 	} else {
-		alert('Failed to submit score: ' + result.message);
+		window.showAlert('Failed to submit score: ' + result.message, 'error');
 	}
 	
 	// Disable controls
@@ -199,6 +199,7 @@ async function endGame() {
 	scrambledWord.textContent = '— — — — —';
 	levelHint.textContent = 'Press START to play again';
 }
+
 
 function restartGame() {
 	if (gameManager.isGameActive) {
@@ -217,7 +218,7 @@ gameManager.onTimerUpdate = (seconds) => {
 };
 
 gameManager.onTimeout = () => {
-	alert('Time expired! Submitting your score...');
+	window.showAlert('Time expired! Submitting your score...', 'error');
 	endGame();
 };
 

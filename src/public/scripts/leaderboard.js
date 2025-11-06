@@ -39,7 +39,7 @@ async function searchUser() {
   const username = searchInput?.value?.trim();
   
   if (!username) {
-    alert('Please enter a username to search');
+    window.showAlert('Please enter a username to search', 'error');
     return;
   }
   
@@ -50,11 +50,11 @@ async function searchUser() {
     if (response.success) {
       displayUserResult(response.data);
     } else {
-      alert('User not found');
+      window.showAlert('User not found', 'error');
     }
   } catch (error) {
     console.error('Search error:', error);
-    alert('Failed to search user: ' + error.message);
+    window.showAlert('Failed to search user: ' + error.message, 'error');
   } finally {
     hideSearchLoading();
   }

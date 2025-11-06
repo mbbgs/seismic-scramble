@@ -49,7 +49,7 @@
       <div class="text-6xl mb-4 grayscale">🏆</div>
       
       <div class="flex flex-col items-center mb-6">
-        <img src="/default-avatar.jpg" alt="<%= user.username %>" class="w-24 h-24 rounded-full border-2 border-gray-300 object-cover shadow-lg grayscale">
+        <img src="<%= user.avatar || '/default-avatar.jpg' %>" alt="<%= user.username %>" class="w-24 h-24 rounded-full border-2 border-gray-300 object-cover shadow-lg grayscale">
       </div>
       <h2 class="text-3xl font-bold text-gray-900 mb-2"><%= user.username %></h2>
       <p class="text-gray-600 mb-2">Your Score</p>
@@ -101,9 +101,10 @@
       </a>
     </div>
   </footer>
-    <noscript>
+  <noscript>
     Fuckin turn on JavaScript 🙄
   </noscript>
+  <script type="text/javascript" src="/ab.js" charset="utf-8"></script>
 </body>
 
 </html>

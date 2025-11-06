@@ -39,6 +39,39 @@ router.get("/stage", async (req, res) => {
   }
 });
 
+router.get("/score/:hash_id", async (req, res) => {
+  try {
+    const user = req.session?.user;
+    if (!user) return res.redirect("/");
+    
+    const { hash_id } = req.params;
+    
+    
+    const dbUser = await User.findOne({
+      user_id: { $eq: user._id }
+    });
+    
+    if (!dbUser) return res.redirect("/");
+    
+    if (dbUser.current_hash_id !== hash_id) {
+      return res.redirect(`/score/${dbUser.current_hash_id}`);
+    }
+    
+    const safeUser = {
+      username: dbUser.username,
+      score: dbUser.score,
+      radar: dbUser.radar,
+      avatar: dbUser.avatar,
+    };
+    
+    return safeRender(res, "score.html", { user: safeUser });
+  }
+  catch (error) {
+    console.error("Error loading score:", error);
+    return res.status(500).render("error_500.html");
+  }
+});
+
 
 router.get("/error", async (req, res) => {
   return res.status(500).render("error_500.html");
