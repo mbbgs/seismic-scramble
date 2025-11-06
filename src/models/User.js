@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Scrypt = require('../services/Scrypt.js');
+const scrypt = require('../utils/scryptt.js');
 
 
 const userSchema = new mongoose.Schema({
@@ -56,7 +56,7 @@ userSchema.index({ createdAt: -1 });
 
 userSchema.statics.hashPassword = async function(password = '') {
   try {
-    const hashedPassword = await Scrypt.hashToken(password?.trim());
+    const hashedPassword = await scrypt.hashToken(password?.trim());
     return hashedPassword;
   } catch (error) {
     console.error('Error hashing password in User model', error)
@@ -66,7 +66,7 @@ userSchema.statics.hashPassword = async function(password = '') {
 
 userSchema.methods.comparePassword = async function(password) {
   try {
-    const isMatched = await Scrypt.verifyToken(password, this.password);
+    const isMatched = await scrypt.verifyToken(password, this.password);
     return isMatched;
   } catch (error) {
     console.error('Error comparing password in User model', error)
