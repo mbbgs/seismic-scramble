@@ -1,4 +1,5 @@
 const User = require('../models/User.js');
+const crypto = require('crypto')
 const { sendJson, logError } = require('../utils/helpers.js');
 
 const MAX_GAME_TIME = 300000; // 5 minutes
