@@ -41,11 +41,6 @@ export const API = {
     });
   },
   
-  async getUserProfile() {
-    return this.request('/user/profile', {
-      method: 'GET'
-    });
-  },
   
   async updateScore(score) {
     return this.request('/user/update-score', {
@@ -102,7 +97,7 @@ export class GameManager {
       const response = await API.startGame();
       
       if (response.success) {
-        const hashId = response.data.hash_id;
+        const hashId = response.data?.hash_id;
         localStorage.setItem('game_hash', hashId);
         
         this.startTime = Date.now();
