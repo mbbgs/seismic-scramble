@@ -10,10 +10,10 @@ const CHEAT_SCORE = 10000;
 
 module.exports.submitScore = async function(req, res) {
 	try {
-		const { hash_id, score } = req.body;
+		const { hash_id = '', score = '' } = req.body;
 		const user_id = req.session?.user.user_id;
 		
-		if (!hash_id || !score) {
+		if (!hash_id.trim() || !score.trim()) {
 			return sendJson(res, 400, false, "Missing required fields");
 		}
 		

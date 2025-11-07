@@ -39,22 +39,30 @@ router.get("/stage", async (req, res) => {
   }
 });
 
+
 router.get("/score/:hash_id", async (req, res) => {
   try {
     const user = req.session?.user;
-    if (!user) return res.redirect("/");
+    if (!user) {
+      return safeRender(res, "score.html", {
+        user: null,
+        message: "You are not logged in. Please start a new session."
+      });
+    }
     
     const { hash_id } = req.params;
+    const dbUser = await User.findOne({ user_id: user.user_id });
     
+    if (!dbUser) {
+      return safeRender(res, "score.html", {
+        user: null,
+        message: "User not found."
+      });
+    }
     
-    const dbUser = await User.findOne({
-      user_id: { $eq: user._id }
-    });
-    
-    if (!dbUser) return res.redirect("/");
-    
+    let message = null;
     if (dbUser.current_hash_id !== hash_id) {
-      return res.redirect(`/score/${dbUser.hash_id}`);
+      message = "This game session has expired or is invalid.";
     }
     
     const safeUser = {
@@ -64,13 +72,13 @@ router.get("/score/:hash_id", async (req, res) => {
       avatar: dbUser.avatar,
     };
     
-    return safeRender(res, "score.html", { user: safeUser });
-  }
-  catch (error) {
+    return safeRender(res, "score.html", { user: safeUser, message });
+  } catch (error) {
     console.error("Error loading score:", error);
-    return res.status(500).redirect("/error");
+    return safeRender(res, "error_500.html");
   }
 });
+
 
 
 router.get("/error", async (req, res) => {

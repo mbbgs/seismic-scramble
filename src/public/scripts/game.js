@@ -157,7 +157,7 @@ async function startGame() {
 		return;
 	}
 	
-	localStorage.setItem('hash_id', result.hash_id);
+	
 	
 	currentRound = 0;
 	correctAnswers = 0;
@@ -178,13 +178,12 @@ async function startGame() {
 }
 
 async function endGame() {
-	const hash_id = localStorage.getItem('hash_id');
-	const result = await gameManager.submitScore(gameScore, hash_id);
+	const game_hash = localStorage.getItem('game_hash');
+	const result = await gameManager.submitScore(gameScore, game_hash);
 	
 	if (result.success) {
 		const data = result.data;
-		
-		window.location.href = `/score/${hash_id}`;
+		window.location.href = `/score/${encodeURI(game_hash)}`;
 	} else {
 		window.showAlert('Failed to submit score: ' + result.message, 'error');
 	}

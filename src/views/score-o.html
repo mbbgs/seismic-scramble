@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= user ? user.username + " | Seismic Scramble Score" : "Seismic Scramble Score" %></title>
+  <title><%= user.username %> | Seismic Scramble Score</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -42,27 +42,28 @@
     </p>
   </section>
   
-  <% if (message) { %>
-  <div class="max-w-xl mx-auto text-center bg-gray-900 text-white p-6 rounded-2xl shadow-glow mb-16">
-    <p class="text-lg font-semibold"><%= message %></p>
-    <a href="/" class="inline-block mt-4 px-6 py-3 bg-white text-gray-900 rounded-xl font-semibold hover:bg-gray-200 transition">Go Home</a>
-  </div>
-  <% } else if (user) { %>
   <div class="max-w-2xl mx-auto px-4 pb-10">
     <div class="bg-white/70 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-glow p-8 text-center">
+      
+      
       <div class="text-6xl mb-4 grayscale">🏆</div>
+      
       <div class="flex flex-col items-center mb-6">
         <img src="<%= user.avatar || '/default-avatar.jpg' %>" alt="<%= user.username %>" class="w-24 h-24 rounded-full border-2 border-gray-300 object-cover shadow-lg grayscale">
       </div>
       <h2 class="text-3xl font-bold text-gray-900 mb-2"><%= user.username %></h2>
       <p class="text-gray-600 mb-2">Your Score</p>
+      
       <h2 class="text-5xl font-extrabold text-gray-900 mb-4"><%= user.score %></h2>
+      
+      
       <p class="text-gray-700 mb-8">
         <strong>Radar:</strong>
         <span class="<%= user.radar === 'red' ? 'text-gray-900' : user.radar === 'orange' ? 'text-gray-700' : 'text-gray-600' %>">
           <%= user.radar || 'Not available' %>
         </span>
       </p>
+      
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <a href="/headboard" class="px-6 py-3 border border-gray-900 text-gray-900 rounded-xl hover:bg-gray-900 hover:text-white transition font-semibold">
           View Leaderboard
@@ -73,7 +74,6 @@
       </div>
     </div>
   </div>
-  <% } %>
   
   <section class="py-16 px-6 text-center">
     <h2 class="text-3xl font-bold text-gray-900 mb-4">Learn More About Seismic</h2>
@@ -92,7 +92,7 @@
   </section>
   
   <footer class="border-t border-gray-200 py-8 text-center text-gray-500">
-    <p class="mb-2">Built by a <span class="text-gray-900 font-semibold">Seismicist</span> ⚡</p>
+    <p class="mb-2">Crafted by <span class="text-gray-900 font-semibold">Seismicist</span> ⚡</p>
     <div class="flex justify-center mt-2">
       <a href="https://x.com/hound_tre" target="_blank" aria-label="Twitter / X" class="hover:text-gray-900 transition">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
@@ -101,8 +101,9 @@
       </a>
     </div>
   </footer>
-  
-  <noscript>Fuckin turn on JavaScript 🙄</noscript>
+  <noscript>
+    Fuckin turn on JavaScript 🙄
+  </noscript>
   <script type="text/javascript" src="/ab.js" charset="utf-8"></script>
 </body>
 
