@@ -86,11 +86,11 @@ router.get("/error", async (req, res) => {
 });
 
 router.get("/not-found", async (req, res) => {
-  return res.status(500).render("error_500.html");
+  return res.status(404).render("error_404.html");
 });
 
 router.get("/hehe", async (req, res) => {
-  return res.status(500).render("error_403.html");
+  return res.status(403).render("error_403.html");
 });
 
 

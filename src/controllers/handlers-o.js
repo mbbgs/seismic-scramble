@@ -131,7 +131,7 @@ module.exports.submitScore = async function(req, res) {
 		}
 		
 		return sendJson(res, 200, true, "Score submitted", {
-			score: finalScore,
+			score: finalScore, you 
 			time: Math.round(elapsed / 1000),
 			radar,
 			isHighScore,
