@@ -8,12 +8,13 @@ const TIME_PENALTY_RATE = 2;
 const SUSPICIOUS_TIME = 30000; // 30 seconds
 const CHEAT_SCORE = 10000;
 
+/* 
 module.exports.submitScore = async function(req, res) {
 	try {
-		const { hash_id = '', score = '' } = req.body;
+		const { hash_id , score } = req.body;
 		const user_id = req.session?.user.user_id;
 		
-		if (!hash_id.trim() || !score.trim()) {
+		if (!String(hash_id).trim() || !score) {
 			return sendJson(res, 400, false, "Missing required fields");
 		}
 		
@@ -62,6 +63,85 @@ module.exports.submitScore = async function(req, res) {
 		return sendJson(res, 500, false, "Internal Server Error");
 	}
 };
+*/
+module.exports.submitScore = async function(req, res) {
+	try {
+		const { hash_id, score } = req.body;
+		const user_id = req.session?.user?.user_id;
+		if (!user_id) {
+			return sendJson(res, 401, false, "Unauthorized");
+		}
+		
+		if (!String(hash_id).trim() || score == null) {
+			return sendJson(res, 400, false, "Missing required fields");
+		}
+		
+		const user = await User.findOne({
+			user_id,
+			hash_id: { $eq: hash_id },
+		});
+		
+		if (!user || !user.start_time) {
+			return sendJson(res, 400, false, "Invalid or expired game session");
+		}
+		
+		const elapsed = Date.now() - new Date(user.start_time).getTime();
+		
+		
+		if (typeof MAX_GAME_TIME !== "undefined" && elapsed > MAX_GAME_TIME) {
+			return sendJson(res, 400, false, "Game session expired");
+		}
+		
+		const timeBonus = Math.max(
+			0,
+			(typeof BASE_SCORE !== "undefined" ? BASE_SCORE : 1000) -
+			(elapsed / 1000) *
+			(typeof TIME_PENALTY_RATE !== "undefined" ? TIME_PENALTY_RATE : 5)
+		);
+		const finalScore = Math.round(score + timeBonus);
+		
+		let radar = "green";
+		const suspiciousTime =
+			typeof SUSPICIOUS_TIME !== "undefined" ? SUSPICIOUS_TIME : 5000;
+		const cheatScore =
+			typeof CHEAT_SCORE !== "undefined" ? CHEAT_SCORE : 5000;
+		
+		if (elapsed < suspiciousTime || finalScore > cheatScore) {
+			radar = "red";
+		} else if (
+			elapsed < suspiciousTime * 1.5 ||
+			finalScore > cheatScore * 0.7
+		) {
+			radar = "orange";
+		}
+		
+		const isHighScore = finalScore > user.score;
+		const update = await User.findOneAndUpdate({ user_id, hash_id },
+		{
+			$set: {
+				score: isHighScore ? finalScore : user.score,
+				radar,
+				hash_id: null,
+				start_time: null,
+			},
+		}, { new: true });
+		
+		if (!update) {
+			return sendJson(res, 400, false, "Replay detected or invalid session");
+		}
+		
+		return sendJson(res, 200, true, "Score submitted", {
+			score: finalScore,
+			time: Math.round(elapsed / 1000),
+			radar,
+			isHighScore,
+		});
+	} catch (error) {
+		logError("Error submitting score", error);
+		return sendJson(res, 500, false, "Internal Server Error");
+	}
+};
+
 
 module.exports.startGame = async function(req, res) {
 	try {
