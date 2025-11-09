@@ -39,6 +39,7 @@ router.get("/stage", async (req, res) => {
   }
 });
 
+/*
 
 router.get("/score/:hash_id", async (req, res) => {
   try {
@@ -50,8 +51,10 @@ router.get("/score/:hash_id", async (req, res) => {
       });
     }
     
-    const { hash_id } = req.params;
+    const { hash_id } = decodeURI(req.params);
     const dbUser = await User.findOne({ user_id: user.user_id });
+    
+    
     
     if (!dbUser) {
       return safeRender(res, "score.html", {
@@ -61,7 +64,7 @@ router.get("/score/:hash_id", async (req, res) => {
     }
     
     let message = null;
-    if (dbUser.current_hash_id !== hash_id) {
+    if (dbUser.hash_id !== hash_id) {
       message = "This game session has expired or is invalid.";
     }
     
@@ -79,6 +82,81 @@ router.get("/score/:hash_id", async (req, res) => {
   }
 });
 
+*/
+
+router.get("/score/:hash_id", async (req, res) => {
+  try {
+    const user = req.session?.user;
+    if (!user || !user.user_id) {
+      req.session?.destroy?.();
+      return safeRender(res, "score.html", {
+        user: null,
+        message: "You are not logged in. Please start a new session."
+      });
+    }
+    
+    const hash_id = req.params.hash_id?.trim();
+    if (!hash_id || !/^[a-zA-Z0-9_-]{8,128}$/.test(hash_id)) {
+      return safeRender(res, "score.html", {
+        user: null,
+        message: "Invalid session identifier."
+      });
+    }
+    const dbUser = await User.findOne({ user_id: user.user_id },
+    {
+      username: 1,
+      score: 1,
+      radar: 1,
+      avatar: 1,
+      hash_id: 1,
+      _id: 0
+    }).lean(); // Use lean() for read-only operations
+    
+    if (!dbUser) {
+      // Log potential unauthorized access attempt
+      console.warn(`User not found for user_id: ${user.user_id}`);
+      req.session?.destroy?.();
+      return safeRender(res, "score.html", {
+        user: null,
+        message: "User not found."
+      });
+    }
+    
+    // 5. Timing-safe comparison to prevent timing attacks
+    const crypto = require('crypto');
+    const hashMatch = crypto.timingSafeEqual(
+      Buffer.from(dbUser.hash_id || ''),
+      Buffer.from(hash_id)
+    );
+    
+    let message = null;
+    if (!hashMatch) {
+      console.warn(`Hash mismatch for user: ${user.user_id}, provided: ${hash_id}`);
+      message = "This game session has expired or is invalid.";
+    }
+    
+    const safeUser = {
+      username: String(dbUser.username || '').substring(0, 50), // Limit length
+      score: Number(dbUser.score) || 0,
+      radar: Number(dbUser.radar) || 0,
+      avatar: String(dbUser.avatar || '').substring(0, 200), // Validate avatar URL
+    };
+    
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    
+    return safeRender(res, "score.html", { user: safeUser, message });
+    
+  } catch (error) {
+   console.error("Error loading score:", {
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+      userId: req.session?.user?.user_id
+    });
+    
+    return safeRender(res, "error_500.html");
+  }
+});
 
 
 router.get("/error", async (req, res) => {

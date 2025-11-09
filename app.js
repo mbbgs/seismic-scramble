@@ -64,7 +64,7 @@ app.use(
           "https://unpkg.com",
           "https://cdn.tailwindcss.com"
         ],
-        styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net","https://cdn.tailwindcss.com"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdn.tailwindcss.com"],
         imgSrc: ["'self'", "data:", "https:"],
         fontSrc: ["'self'", "data:"],
       },
